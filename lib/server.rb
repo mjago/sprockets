@@ -1,5 +1,6 @@
 
-CODE_PATH = File.expand_path(File.join(File.dirname(__FILE__),'..','code'))
+
+CODE_PATH = File.expand_path(File.join(File.dirname(__FILE__),'..'))
 
 class MySocket
 	require 'socket'               # Get sockets from stdlib
