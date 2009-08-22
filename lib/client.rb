@@ -9,6 +9,14 @@ def update_file(name,s)
   end
 end
 
+def run_specs
+	temp =	%x{spec.bat ../spec/server_spec.rb --colour --format html:\"../spec/spec_output.html\" --format specdoc}
+	puts temp.class
+#~ temp = `spec \"server_spec.rb --colour --format html:\"spec_output.html\" --format specdoc\"`
+	STDOUT.puts temp
+	STDOUT.flush
+end
+
 @start_time = Time.new
 hostname = '192.168.1.64'
 port = 2000
@@ -38,6 +46,7 @@ loop do
         STDOUT.puts "updating #{file_name}"
         STDOUT.flush
         update_file(file_name,s)
+				run_specs
         count = 0
       end
     end
