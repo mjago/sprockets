@@ -6,6 +6,7 @@ class StateData
   attr_reader :connection_state_data
   attr_reader :tx_messaging_state_data
   attr_reader :rx_messaging_state_data
+  attr_reader :main_state_data
 
   def self.test_state_data
     [
@@ -75,8 +76,29 @@ class StateData
      [:idle_state, :no_action!, :idle_state],
      [:idle_state, :test_async_rx!, :testing_async_rx_state],
      [:idle_state, :await_ack!, :awaiting_ack_state],
+
      [:testing_async_rx_state, :no_async_rx_data!, :idle_state],
      [:testing_async_rx_state, :async_rx_data!, :idle_state],
+    ]
+  end
+  
+  def self.main_state_data
+    [
+     [:init_state, :initialised!, :contact_tester_state],
+     
+     [:contact_tester_state, :tester_not_contacted!, :contact_tester_state],
+     [:contact_tester_state, :tester_contacted!, :listen_for_tester_state],
+     [:contact_tester_state, :contact_tester_timeout!, :init_state],
+
+     [:listen_for_tester_state, :tester_unheard!, :listen_for_tester_state],
+     [:listen_for_tester_state, :tester_heard!, :send_tester_hash_state],
+     [:listen_for_tester_state, :tester_listening_timeout!, :contact_tester_state],
+
+     [:send_tester_hash_state, :sent_hash_to_tester!, :sent_tester_hash_state],
+     [:send_tester_hash_state, :retry_overcount!, :warning_hash_nak_overcount_state],
+     
+     [:sent_tester_hash_state, :received_hash_ack!, :verify_tester_hash_state],
+     [:sent_tester_hash_state, :received_hash_nak!, :send_tester_hash_state],     
     ]
   end
 end
@@ -85,11 +107,13 @@ class StateMachines
   attr_accessor :connection_states
   attr_accessor :tx_message_states
   attr_accessor :rx_message_states
+  attr_accessor :main_states
   
   def initialize
     @connection_states = build_state_machine('connection_state_data')
     @tx_message_states = build_state_machine('tx_messaging_state_data')
     @rx_message_states = build_state_machine('rx_messaging_state_data')
+    @main_states = build_state_machine('main_state_data')
   end
   
   def build_state_machine(statemachine_to_build)
@@ -539,10 +563,116 @@ describe StateData do
           @statemachine.rx_message_states.async_rx_data!
           @statemachine.rx_message_states.state.should == :idle_state
         end
-
         
       end
       
-    end  
+    end
+
+    
+    ###############
+    # main_states #
+    ###############
+    
+    describe "main_states" do
+      it 'should have statemachine called main_states' do
+        @statemachine.main_states.class.should == Statemachine::Statemachine
+      end
+
+      describe 'init_state' do
+        it 'is the initial state' do
+          @statemachine.main_states.state.should == :init_state
+        end
+        
+        it 'is changes to contact_tester_state given initialised!' do
+          @statemachine.main_states.initialised!
+          @statemachine.main_states.state.should == :contact_tester_state
+        end
+        
+      end
+      
+      describe 'contact_tester_state' do
+        before do
+          @statemachine.main_states.initialised!
+        end
+        
+        it 'is re-entrant given tester_not_contacted' do
+          @statemachine.main_states.tester_not_contacted!
+          @statemachine.main_states.state.should == :contact_tester_state
+        end
+        
+        it 'changes to listen_for_tester_state given tester_contacted!' do
+          @statemachine.main_states.tester_contacted!
+          @statemachine.main_states.state.should == :listen_for_tester_state
+        end
+        
+        it 'changes to init_state given contact_tester_timeout!' do
+          @statemachine.main_states.contact_tester_timeout!
+          @statemachine.main_states.state.should == :init_state
+        end
+      end      
+      
+      describe 'listen_for_tester_state' do
+        before do
+          @statemachine.main_states.initialised!
+          @statemachine.main_states.tester_contacted!
+        end
+        
+        it 'is re-entrant given tester_unheard' do
+          @statemachine.main_states.tester_unheard!
+          @statemachine.main_states.state.should == :listen_for_tester_state
+        end
+        
+        it 'changes to send_tester_hash_state given tester_heard' do
+          @statemachine.main_states.tester_heard!
+          @statemachine.main_states.state.should == :send_tester_hash_state
+        end
+        
+        it 'changes to contact_tester_state given tester_listening_timeout!' do
+          @statemachine.main_states.tester_listening_timeout!
+          @statemachine.main_states.state.should == :contact_tester_state
+        end
+      end
+      
+      describe 'send_tester_hash_state' do
+        before do
+          @statemachine.main_states.initialised!
+          @statemachine.main_states.tester_contacted!
+          @statemachine.main_states.tester_heard!
+        end
+        
+        it 'changes to sent_tester_hash_state on sent_hash_to_tester!' do
+          @statemachine.main_states.sent_hash_to_tester!
+          @statemachine.main_states.state.should == :sent_tester_hash_state
+        end
+
+        it 'changes to warning_hash_nak_overcount_state on retry_overcount!' do
+          @statemachine.main_states.retry_overcount!
+          @statemachine.main_states.state.should == :warning_hash_nak_overcount_state
+        end
+
+      end
+      
+      describe 'sent_tester_hash_state' do
+        before do
+          @statemachine.main_states.initialised!
+          @statemachine.main_states.tester_contacted!
+          @statemachine.main_states.tester_heard!
+          @statemachine.main_states.sent_hash_to_tester!
+        end
+        
+        it 'changes to verify_tester_hash_state given received_hash_ack!' do
+          @statemachine.main_states.received_hash_ack!
+          @statemachine.main_states.state.should == :verify_tester_hash_state
+        end
+        
+        it 'changes to send_tester_hash_state given received_hash_nak!' do
+          @statemachine.main_states.received_hash_nak!
+          @statemachine.main_states.state.should == :send_tester_hash_state
+        end
+        
+        
+        
+      end      
+    end
   end
 end
