@@ -1,7 +1,7 @@
   require 'socket'               # Get sockets from stdlib
   require 'statemachine'
   require 'find'
-
+	
 CODE_PATH = File.expand_path(File.join(File.dirname(__FILE__),'..'))
 
   #~ Find.find(CODE_PATH) do |path|
@@ -15,7 +15,8 @@ CODE_PATH = File.expand_path(File.join(File.dirname(__FILE__),'..'))
 	#~ exit 2
 
 class ConsoleSocket
-  
+  require 'watchr'
+	
   def initialize
   end
   
@@ -115,15 +116,21 @@ class ConsoleSocket
         STDOUT.flush
       end
       sleep 1
-      @files.each_key do |file|
-        if @files[file] != File.mtime(file)
-          @files[file] = File.mtime(file)
-          @client.puts
-          send_file(file)
-          @client.puts
-          count = 0
-        end
-      end
+			
+			watch('test/test_.*\.rb') do |md| 
+				STDOUT.puts "passed in #{md}"
+				STDOUT.flush
+			end
+
+      #~ @files.each_key do |file|
+        #~ if @files[file] != File.mtime(file)
+          #~ @files[file] = File.mtime(file)
+          #~ @client.puts
+          #~ send_file(file)
+          #~ @client.puts
+          #~ count = 0
+        #~ end
+      #~ end
     end
   end
   

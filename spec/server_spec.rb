@@ -1,120 +1,551 @@
 
 
-require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','server.rb'))
+# require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','socket.rb'))
+require 'statemachine'
 
-class TestClass
-  def response?
-    true
+class StateData
+  attr_reader :test_state_data
+  attr_reader :connection_state_data
+  attr_reader :tx_messaging_state_data
+  attr_reader :rx_messaging_state_data
+
+  def self.test_state_data
+    [
+     [:first_state, :first_action!, :second_state],
+    ]
+  end
+  
+  def self.connection_state_data
+    [
+     [:unconnected_state, :no_rx_detected!, :unconnected_state],
+     [:unconnected_state, :tx_detected!, :tx_only_state],
+     [:unconnected_state, :rx_detected!, :rx_only_state],
+     
+     [:tx_only_state, :tx_detected!, :tx_only_state],
+     [:tx_only_state, :rx_detected!, :full_duplex_state],
+     [:tx_only_state, :tx_dropped!, :unconnected_state],
+     
+     [:rx_only_state, :rx_detected!, :rx_only_state],
+     [:rx_only_state, :tx_detected!, :full_duplex_state],
+     [:rx_only_state, :rx_dropped!, :unconnected_state],
+     
+     [:full_duplex_state, :rx_detected!, :full_duplex_state],
+     [:full_duplex_state, :tx_detected!, :full_duplex_state],
+     [:full_duplex_state, :tx_dropped!, :rx_only_state],
+     [:full_duplex_state, :rx_dropped!, :tx_only_state],
+    ]
+  end
+  
+  def self.tx_messaging_state_data
+    [
+     [:idle_state, :no_action!, :idle_state],
+     [:idle_state, :send_file!, :sending_file_state],
+     [:idle_state, :delete_file!, :deleting_file_state],
+     [:idle_state, :send_structure!, :sending_structure_state],
+     [:idle_state, :send_hash!, :sending_hash_state],
+     [:idle_state, :send_tick!, :sending_tick_state],
+     
+     [:sending_file_state, :no_action!, :send_file_state],
+     [:sending_file_state, :ack_received!, :idle_state],
+     [:sending_file_state, :nak_received!, :idle_state],
+     [:sending_file_state, :rx_timeout!, :idle_state],
+     
+     [:deleting_file_state, :no_action!, :deleting_file_state],
+     [:deleting_file_state, :ack_received!, :idle_state],
+     [:deleting_file_state, :nak_received!, :idle_state],
+     [:deleting_file_state, :rx_timeout!, :idle_state],
+     
+     [:sending_structure_state, :no_action!, :sending_structure_state],
+     [:sending_structure_state, :ack_received!, :idle_state],
+     [:sending_structure_state, :nak_received!, :idle_state],
+     [:sending_structure_state, :rx_timeout!, :idle_state],
+     
+     [:sending_tick_state, :no_action!, :sending_tick_state],
+     [:sending_tick_state, :ack_received!, :idle_state],
+     [:sending_tick_state, :nak_received!, :idle_state],
+     [:sending_tick_state, :rx_timeout!, :idle_state],
+     
+     [:sending_hash_state, :no_action!, :sending_hash_state],
+     [:sending_hash_state, :ack_received!, :idle_state],
+     [:sending_hash_state, :nak_received!, :idle_state],
+     [:sending_hash_state, :rx_timeout!, :idle_state],
+    ]
+  end
+  
+  def self.rx_messaging_state_data
+    [
+     [:idle_state, :no_action!, :idle_state],
+     [:idle_state, :test_async_rx!, :testing_async_rx_state],
+     [:idle_state, :await_ack!, :awaiting_ack_state],
+     [:testing_async_rx_state, :no_async_rx_data!, :idle_state],
+     [:testing_async_rx_state, :async_rx_data!, :idle_state],
+    ]
   end
 end
 
+class StateMachines
+  attr_accessor :connection_states
+  attr_accessor :tx_message_states
+  attr_accessor :rx_message_states
+  
+  def initialize
+    @connection_states = build_state_machine('connection_state_data')
+    @tx_message_states = build_state_machine('tx_messaging_state_data')
+    @rx_message_states = build_state_machine('rx_messaging_state_data')
+  end
+  
+  def build_state_machine(statemachine_to_build)
+    sm = Statemachine.build do
+      StateData.send(statemachine_to_build).each do |st|
+        trans st[0].to_s.to_sym, st[1].to_s.to_sym, st[2].to_s.to_sym
+      end
+    end
+    sm
+  end
+end
 
-describe "ConsoleSocket" do
+class TestServerSocket
+  attr_accessor :role
+  attr_accessor :connection_state
+end
+
+#########
+# tests #
+#########
+
+describe "Configuration" do
+  
+  it "verifies config role exists" do
+    @config = YAML.load_file(CONFIG_FILE)
+  end
+
+  CONFIG_FILE = './../lib/config.yml' 
+  it "can see a configuration file called config.yml" do
+    File.file?(CONFIG_FILE).should == true
+  end
+
+  it "verifies config port for dev socket is 2000" do
+    @config = YAML.load_file(CONFIG_FILE)
+    @config[:dev_socket_port].should == 2000
+  end
+
+  it "verifies config port for tester socket is 2001" do
+    @config = YAML.load_file(CONFIG_FILE)
+    @config[:tester_socket_port].should == 2001
+  end
+
+  it "verifies config hostname for tester is 192.168.10.91" do
+    @config = YAML.load_file(CONFIG_FILE)
+    @config[:tester_hostname].should == '192.168.10.91'
+  end
+
+  it "verifies config hostname for dev is 192.168.10.57" do
+    @config = YAML.load_file(CONFIG_FILE)
+    @config[:dev_hostname].should == '192.168.10.57'
+  end
+  
+  it "verifies role is dev if @role is dev" do
+    @role = :dev
+    if @role == :dev
+      @config = YAML.load_file(CONFIG_FILE)
+      @config[:role].should == :dev
+    elsif @role == :tester
+      @config = YAML.load_file(CONFIG_FILE)
+      @config[:role].should == :tester
+    else
+      true.should == false
+    end
+    
+  end
+end
+
+describe StateData do
+  before do
+    @state_data = StateData.new
+  end
+  
+  it 'exists as a class' do
+    @state_data.class.should == StateData
+  end
+  
+  it 'has a method called test_state_data' do
+    @state_data.methods.include?('test_state_data').should == true
+  end
+  
+  it 'has a method called connection_state_data' do
+    @state_data.methods.include?('connection_state_data').should == true
+  end
+  
+  it 'has a method called tx_messaging_states_data' do
+    @state_data.methods.include?('tx_messaging_state_data').should == true
+  end
+end
+
+describe 'StateMachines' do
   before(:each) do
-    @m = ConsoleSocket.new
+    @statemachine = StateMachines.new
   end
+  
+  it "exists as a class" do
+    @statemachine.class.should == StateMachines
+  end
+  
+  describe 'build_state_machine' do
+    it 'has a method called build_state_machine' do
+      @statemachine.methods.include?('build_state_machine').should == true
+    end
+    
+    it 'returns a state machine when passed a state machine data name' do
+      @statemachine.build_state_machine('test_state_data').class.should == Statemachine::Statemachine
+    end
+    
+  end
+  
+  describe 'connection_states' do
+    it 'should have statemachine called connection_states' do
+      @statemachine.connection_states.class.should == Statemachine::Statemachine
+    end
+    
+    describe 'unconnected_state' do
+      it 'is the initial state' do
+        @statemachine.connection_states.state.should == :unconnected_state
+      end
+      
+      it 'is re-entrant following no_rx_detected!' do
+        @statemachine.connection_states.no_rx_detected!
+        @statemachine.connection_states.state.should == :unconnected_state
+      end
+      
+      it 'changes state to :tx_only_state following tx_detected!' do
+        @statemachine.connection_states.tx_detected!
+        @statemachine.connection_states.state.should == :tx_only_state
+      end
+      
+      it 'changes state to :rx_only_state following rx_detected!' do
+        @statemachine.connection_states.rx_detected!
+        @statemachine.connection_states.state.should == :rx_only_state
+      end
+    end
 
-  after(:each) do
-    @m = nil
-  end
+    describe 'tx_only_state' do
+      before do
+        @statemachine.connection_states.tx_detected!
+      end
 
-  it "should exist as a class" do
-    @m.class.should == ConsoleSocket
-  end
-  
-  it "should initialise ConsoleSocket.files" do
-    class ConsoleSocket
-      attr_accessor :files
+      it 'is re-entrant following tx_detected!' do
+        @statemachine.connection_states.tx_detected!
+        @statemachine.connection_states.state.should == :tx_only_state
+      end
+      
+      it 'changes state to full_duplex_state following rx_detected!' do
+        @statemachine.connection_states.rx_detected!
+        @statemachine.connection_states.state.should == :full_duplex_state
+      end
+      
+      it 'changes state to unconnected_state following tx_dropped!' do
+        @statemachine.connection_states.tx_dropped!
+        @statemachine.connection_states.state.should == :unconnected_state
+      end
     end
-    @m.build_file_tree
-    @m.files.class.should == Hash
-    @m.files.has_key?("#{File.expand_path(File.join(File.dirname(__FILE__),'..','spec','server_spec.rb'))}").should == true
-    @m.files.has_key?("#{File.expand_path(File.join(File.dirname(__FILE__),'..','lib','client.rb'))}").should == true
-    @m.files.has_key?("#{File.expand_path(File.join(File.dirname(__FILE__),'..','lib','server.rb'))}").should == true
-    key = "#{File.expand_path(File.join(File.dirname(__FILE__),'..','spec','server_spec.rb'))}"
-    @m.files[key].class.should == Time
-  end
+    
+    describe 'rx_only_state' do
+      before do
+        @statemachine.connection_states.rx_detected!
+      end
 
-  describe "open_socket" do
-    class ConsoleSocket
-      attr_accessor :server
+      it 'is re-entrant following rx_detected!' do
+        @statemachine.connection_states.rx_detected!
+        @statemachine.connection_states.state.should == :rx_only_state
+      end
+      
+      it 'changes state to full_duplex_state following tx_detected!' do
+        @statemachine.connection_states.tx_detected!
+        @statemachine.connection_states.state.should == :full_duplex_state
+      end
+      
+      it 'changes state to unconnected_state following rx_dropped!' do
+        @statemachine.connection_states.rx_dropped!
+        @statemachine.connection_states.state.should == :unconnected_state
+      end
     end
-    it "should exist as a method of ConsoleSocket and open a socket" do
-      @m.methods.include?('open_socket').should == true
-      @m.open_socket(1234).class.should == TCPServer
-      @m.server.class.should == TCPServer
-    end
-  end	
+    
+    describe 'full_duplex_state' do
+      before do
+        @statemachine.connection_states.rx_detected!
+        @statemachine.connection_states.tx_detected!
+      end
 
-  describe "close_socket" do
-    class ConsoleSocket
-      attr_accessor :server
-    end
-    it "should exist as a method of ConsoleSocket and close a socket" do
-     # m = ConsoleSocket.new
-      @m.methods.include?('close_socket').should == true
-      @m.close_socket
-      @m.server.should == nil
-    end
-  end	
-  
-  describe "client_responded?" do
-    it "should be a method" do
-      @m.methods.include?('client_responded?').should == true
-    end
-    it "and return false if no socket initialised" do
-      @m.client_responded?.should == false
-      @m.close_socket
-    end
-    it "and cause an exeception due to no response if socket initialised" do
-      @m.open_socket(1235)
-      @m.client_responded?.should == false
-      @m.close_socket
+      it 'is re-entrant following rx_detected!' do
+        @statemachine.connection_states.rx_detected!
+        @statemachine.connection_states.state.should == :full_duplex_state
+      end
+      
+      it 'is re-entrant following tx_detected!' do
+        @statemachine.connection_states.tx_detected!
+        @statemachine.connection_states.state.should == :full_duplex_state
+      end
+      
+      it 'changes state to rx_only_state following tx_dropped!' do
+        @statemachine.connection_states.tx_dropped!
+        @statemachine.connection_states.state.should == :rx_only_state
+      end
+      
+      it 'changes state to tx_only_state following rx_dropped!' do
+        @statemachine.connection_states.rx_dropped!
+        @statemachine.connection_states.state.should == :tx_only_state
+      end
+      
     end
   end
   
-  describe "wait_for_client" do 
-    it "should exist as a method" do
-      @m.methods.include?("wait_for_client").should == true
+  ####################
+  # tx_message_states #
+  ####################
+  
+  describe "tx_message_states" do
+    it 'should have statemachine called tx_message_states' do
+      @statemachine.tx_message_states.class.should == Statemachine::Statemachine
     end
-    it "should wait for response from mocked client" do
-      client_responded = mock('@m.client_responded?')
-      @m.client_responded?.should == false
+    
+    describe 'idle_state' do
+      it 'is the initial state' do
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
+      
+      it 'is re-entrant given no_action!' do
+        @statemachine.tx_message_states.no_action!
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
+      
+      it 'changes state to sending_file_state given send_file!' do
+        @statemachine.tx_message_states.send_file!
+        @statemachine.tx_message_states.state.should == :sending_file_state
+      end
+      
+      it 'changes state to deleting_file_state given delete_file!' do
+        @statemachine.tx_message_states.delete_file!
+        @statemachine.tx_message_states.state.should == :deleting_file_state
+      end
+      
+      it 'changes state to sending_structure_state given send_structure!' do
+        @statemachine.tx_message_states.send_structure!
+        @statemachine.tx_message_states.state.should == :sending_structure_state
+      end
+      
+      it 'changes state to sending_hash_state given send_hash!' do
+        @statemachine.tx_message_states.send_hash!
+        @statemachine.tx_message_states.state.should == :sending_hash_state
+      end
+      
+      it 'changes state to sending_tick_state given send_tick!' do
+        @statemachine.tx_message_states.send_tick!
+        @statemachine.tx_message_states.state.should == :sending_tick_state
+      end
+    end
+
+    describe 'sending_file_state' do
+      before do
+        @statemachine.tx_message_states.send_file!
+      end
+      
+      it 'is re-entrant given no_action!' do
+        @statemachine.tx_message_states.no_action!
+        @statemachine.tx_message_states.state.should == :send_file_state
+      end
+      
+      it 'changes state to idle_state following ack_received!' do
+        @statemachine.tx_message_states.ack_received!
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
+      
+      it 'changes state to idle_state following nak_received!' do
+        @statemachine.tx_message_states.nak_received!
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
+      
+      it 'changes state to idle_state following rx_timeout!' do
+        @statemachine.tx_message_states.rx_timeout!
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
+      
+      it 'changes state to idle_state following rx_timeout!' do
+        @statemachine.tx_message_states.rx_timeout!
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
+    end
+    
+    describe 'deleting_file_state' do
+      before do
+        @statemachine.tx_message_states.delete_file!
+      end
+      
+      it 'is re-entrant given no_action!' do
+        @statemachine.tx_message_states.no_action!
+        @statemachine.tx_message_states.state.should == :deleting_file_state
+      end
+      
+      it 'changes state to idle_state following ack_received!' do
+        @statemachine.tx_message_states.ack_received!
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
+      
+      it 'changes state to idle_state following nak_received!' do
+        @statemachine.tx_message_states.nak_received!
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
+      
+      it 'changes state to idle_state following rx_timeout!' do
+        @statemachine.tx_message_states.rx_timeout!
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
+      
+      it 'changes state to idle_state following rx_timeout!' do
+        @statemachine.tx_message_states.rx_timeout!
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
+    end
+    
+    describe 'sending_structure_state' do
+      before do
+        @statemachine.tx_message_states.send_structure!
+      end
+      
+      it 'is re-entrant given no_action!' do
+        @statemachine.tx_message_states.no_action!
+        @statemachine.tx_message_states.state.should == :sending_structure_state
+      end
+      
+      it 'changes state to idle_state following ack_received!' do
+        @statemachine.tx_message_states.ack_received!
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
+      
+      it 'changes state to idle_state following nak_received!' do
+        @statemachine.tx_message_states.nak_received!
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
+      
+      it 'changes state to idle_state following rx_timeout!' do
+        @statemachine.tx_message_states.rx_timeout!
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
+      
+      it 'changes state to idle_state following rx_timeout!' do
+        @statemachine.tx_message_states.rx_timeout!
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
+    end
+    
+    describe 'sending_tick_state' do
+      before do
+        @statemachine.tx_message_states.send_tick!
+      end
+      
+      it 'is re-entrant given no_action!' do
+        @statemachine.tx_message_states.no_action!
+        @statemachine.tx_message_states.state.should == :sending_tick_state
+      end
+      
+      it 'changes state to idle_state following ack_received!' do
+        @statemachine.tx_message_states.ack_received!
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
+      
+      it 'changes state to idle_state following nak_received!' do
+        @statemachine.tx_message_states.nak_received!
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
+      
+      it 'changes state to idle_state following rx_timeout!' do
+        @statemachine.tx_message_states.rx_timeout!
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
+      
+      it 'changes state to idle_state following rx_timeout!' do
+        @statemachine.tx_message_states.rx_timeout!
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
+    end
+    describe 'sending_hash_state' do
+      before do
+        @statemachine.tx_message_states.send_hash!
+      end
+      
+      it 'is re-entrant given no_action!' do
+        @statemachine.tx_message_states.no_action!
+        @statemachine.tx_message_states.state.should == :sending_hash_state
+      end
+      
+      it 'changes state to idle_state following ack_received!' do
+        @statemachine.tx_message_states.ack_received!
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
+      
+      it 'changes state to idle_state following nak_received!' do
+        @statemachine.tx_message_states.nak_received!
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
+      
+      it 'changes state to idle_state following rx_timeout!' do
+        @statemachine.tx_message_states.rx_timeout!
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
+      
+      it 'changes state to idle_state following rx_timeout!' do
+        @statemachine.tx_message_states.rx_timeout!
+        @statemachine.tx_message_states.state.should == :idle_state
+      end
     end
   end
   
-  describe "send_file" do
-    it "should exist as a method" do
-      @m.methods.include?("send_file").should == true
-    end
-    it "should send file to client" do
-      pending("requires mocking")
-    end
-  end
+  ####################
+  # rx_message_states #
+  ####################
   
-  describe "transfer_files" do
-    it "should exist as a method" do
-      @m.methods.include?("transfer_files").should == true
+  describe "rx_message_states" do
+    it 'should have statemachine called rx_message_states' do
+      @statemachine.rx_message_states.class.should == Statemachine::Statemachine
     end
-    it "should transfer all relevant files to client" do
-      pending("needs implementing")
+    
+    describe 'idle_state' do
+      it 'is the initial state' do
+        @statemachine.rx_message_states.state.should == :idle_state
+      end
+      
+      it 'is re-entrant given no_action!' do
+        @statemachine.rx_message_states.no_action!
+        @statemachine.rx_message_states.state.should == :idle_state
+      end
+      
+      it 'changes to testing_async_rx_state given test_async_rx!' do
+        @statemachine.rx_message_states.test_async_rx!
+        @statemachine.rx_message_states.state.should == :testing_async_rx_state
+      end
+      
+      it 'changes to awaiting_ack_state given await_ack!' do
+        @statemachine.rx_message_states.await_ack!
+        @statemachine.rx_message_states.state.should == :awaiting_ack_state
+      end
     end
-  end
-  
-  describe "daemon" do
-    it "should exist as a method" do
-      @m.methods.include?("daemon").should == true
+    
+    describe 'testing_async_rx_state' do
+      before do
+        @statemachine.rx_message_states.test_async_rx!
+      end
+
+      it 'changes to idle_state following no_async_rx_data!' do
+        @statemachine.rx_message_states.no_async_rx_data!
+        @statemachine.rx_message_states.state.should == :idle_state
+      end
+
+      it 'changes to idle_state following async_rx_data!' do
+        @statemachine.rx_message_states.async_rx_data!
+        @statemachine.rx_message_states.state.should == :idle_state
+      end
+
+      
     end
-    it "should act as a daemon" do
-      pending "not sure how to test this!"
-    end
-  end
-  
-  describe TestClass do
-    it "response? should return true" do
-      @test_class = TestClass.new
-      @test_class.response?.should eql true 
-    end
-  end
-end	
+    
+  end  
+end
 

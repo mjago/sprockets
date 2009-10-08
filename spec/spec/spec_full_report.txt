@@ -1,0 +1,11 @@
+
+configuration
+- can see a configuration file called config.yml
+- verifies config port for tester socket
+
+TestServerSocket
+- exists as a class
+
+Finished in 0.031 seconds
+
+3 examples, 0 failures
