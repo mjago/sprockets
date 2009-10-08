@@ -4,19 +4,29 @@ def update_file(name,s)
   File.open(name,"w") do |f|
     while line = s.gets do
       return if line.strip == '\0'
-      f.puts line.chop
+      f.STDOUT.puts line.chop
     end
   end
 end
 
+def run_specs
+	temp =	%x{spec.bat ../spec/server_spec.rb --colour --format html:\"../spec/spec_output.html\" --format specdoc}
+	STDOUT.puts temp.class
+#~ temp = `spec \"server_spec.rb --colour --format html:\"spec_output.html\" --format specdoc\"`
+	STDOUT.puts temp
+	STDOUT.flush
+end
+
 @start_time = Time.new
-hostname = '192.168.1.64'
+hostname = '192.168.10.57'
 port = 2000
-puts "hostname = #{hostname}"
-puts "port = #{port}"
+STDOUT.puts "hostname = #{hostname}"
+STDOUT.puts "port = #{port}"
+STDOUT.flush
 count = 0
 loop do
-  puts "looking for server"  
+  STDOUT.puts "looking for server"  
+  STDOUT.flush
   begin 
 
     s = TCPSocket.open(hostname,port)
@@ -38,6 +48,7 @@ loop do
         STDOUT.puts "updating #{file_name}"
         STDOUT.flush
         update_file(file_name,s)
+				run_specs
         count = 0
       end
     end
@@ -53,6 +64,7 @@ loop do
 end
 
 STDOUT.puts "finished in #{Time.now - @start_time} seconds"
+STDOUT.flush
 
 exit
 

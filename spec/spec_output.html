@@ -181,22 +181,82 @@ a {
 <div class="results">
 <div class="example_group">
   <dl>
-  <dt id="example_group_1">MyClass method return</dt>
-    <script type="text/javascript">moveProgressBar('33.3');</script>
-    <dd class="spec passed"><span class="passed_spec_name">return_23() should return 23</span></dd>
+  <dt id="example_group_1">ConsoleSocket</dt>
+    <script type="text/javascript">moveProgressBar('6.6');</script>
+    <dd class="spec passed"><span class="passed_spec_name">should exist as a class</span></dd>
+    <script type="text/javascript">moveProgressBar('13.3');</script>
+    <dd class="spec passed"><span class="passed_spec_name">should initialise ConsoleSocket.files</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
-  <dt id="example_group_2">MyClass variable assignment</dt>
-    <script type="text/javascript">moveProgressBar('66.6');</script>
-    <dd class="spec passed"><span class="passed_spec_name">test_var should be initialised to 2</span></dd>
-    <script type="text/javascript">moveProgressBar('100.0');</script>
-    <dd class="spec passed"><span class="passed_spec_name">should be changeable to 3</span></dd>
+  <dt id="example_group_2">ConsoleSocket open_socket</dt>
+    <script type="text/javascript">moveProgressBar('20.0');</script>
+    <dd class="spec passed"><span class="passed_spec_name">should exist as a method of ConsoleSocket and open a socket</span></dd>
   </dl>
 </div>
-<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>0.156 seconds</strong>";</script>
-<script type="text/javascript">document.getElementById('totals').innerHTML = "3 examples, 0 failures";</script>
+<div class="example_group">
+  <dl>
+  <dt id="example_group_3">ConsoleSocket close_socket</dt>
+    <script type="text/javascript">moveProgressBar('26.6');</script>
+    <dd class="spec passed"><span class="passed_spec_name">should exist as a method of ConsoleSocket and close a socket</span></dd>
+  </dl>
+</div>
+<div class="example_group">
+  <dl>
+  <dt id="example_group_4">ConsoleSocket client_responded?</dt>
+    <script type="text/javascript">moveProgressBar('33.3');</script>
+    <dd class="spec passed"><span class="passed_spec_name">should be a method</span></dd>
+    <script type="text/javascript">moveProgressBar('40.0');</script>
+    <dd class="spec passed"><span class="passed_spec_name">and return false if no socket initialised</span></dd>
+    <script type="text/javascript">moveProgressBar('46.6');</script>
+    <dd class="spec passed"><span class="passed_spec_name">and cause an exeception due to no response if socket initialised</span></dd>
+  </dl>
+</div>
+<div class="example_group">
+  <dl>
+  <dt id="example_group_5">ConsoleSocket wait_for_client</dt>
+    <script type="text/javascript">moveProgressBar('53.3');</script>
+    <dd class="spec passed"><span class="passed_spec_name">should exist as a method</span></dd>
+    <script type="text/javascript">moveProgressBar('60.0');</script>
+    <dd class="spec passed"><span class="passed_spec_name">should wait for response from mocked client</span></dd>
+  </dl>
+</div>
+<div class="example_group">
+  <dl>
+  <dt id="example_group_6">ConsoleSocket send_file</dt>
+    <script type="text/javascript">moveProgressBar('66.6');</script>
+    <dd class="spec passed"><span class="passed_spec_name">should exist as a method</span></dd>
+    <script type="text/javascript">makeYellow('rspec-header');</script>
+    <script type="text/javascript">makeYellow('example_group_6');</script>
+    <script type="text/javascript">moveProgressBar('73.3');</script>
+    <dd class="spec not_implemented"><span class="not_implemented_spec_name">should send file to client (PENDING: requires mocking)</span></dd>
+  </dl>
+</div>
+<div class="example_group">
+  <dl>
+  <dt id="example_group_7">ConsoleSocket transfer_files</dt>
+    <script type="text/javascript">moveProgressBar('80.0');</script>
+    <dd class="spec passed"><span class="passed_spec_name">should exist as a method</span></dd>
+    <script type="text/javascript">makeYellow('rspec-header');</script>
+    <script type="text/javascript">makeYellow('example_group_7');</script>
+    <script type="text/javascript">moveProgressBar('86.6');</script>
+    <dd class="spec not_implemented"><span class="not_implemented_spec_name">should transfer all relevant files to client (PENDING: needs implementing)</span></dd>
+  </dl>
+</div>
+<div class="example_group">
+  <dl>
+  <dt id="example_group_8">ConsoleSocket daemon</dt>
+    <script type="text/javascript">moveProgressBar('93.3');</script>
+    <dd class="spec passed"><span class="passed_spec_name">should exist as a method</span></dd>
+    <script type="text/javascript">makeYellow('rspec-header');</script>
+    <script type="text/javascript">makeYellow('example_group_8');</script>
+    <script type="text/javascript">moveProgressBar('100.0');</script>
+    <dd class="spec not_implemented"><span class="not_implemented_spec_name">should act as a daemon (PENDING: not sure how to test this!)</span></dd>
+  </dl>
+</div>
+<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>3.078 seconds</strong>";</script>
+<script type="text/javascript">document.getElementById('totals').innerHTML = "15 examples, 0 failures, 3 pending";</script>
 </div>
 </div>
 </body>
