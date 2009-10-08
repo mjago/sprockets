@@ -4,15 +4,15 @@ require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','state_data
 
 class StateMachines
   attr_accessor :connection_states
-  attr_accessor :tx_message_states
-  attr_accessor :rx_message_states
-  attr_accessor :main_states
+  attr_accessor :dev_tx_message_states
+  attr_accessor :dev_rx_message_states
+  attr_accessor :dev_main_states
   
   def initialize
     @connection_states = build_state_machine('connection_state_data')
-    @tx_message_states = build_state_machine('tx_messaging_state_data')
-    @rx_message_states = build_state_machine('rx_messaging_state_data')
-    @main_states = build_state_machine('main_state_data')
+    @dev_tx_message_states = build_state_machine('dev_tx_messaging_state_data')
+    @dev_rx_message_states = build_state_machine('dev_rx_messaging_state_data')
+    @dev_main_states = build_state_machine('dev_main_state_data')
   end
   
   def build_state_machine(statemachine_to_build)
