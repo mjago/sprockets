@@ -33,10 +33,10 @@ def draw_state_machine
 	]
 
 	#~ StateData.connection_state_data.each do |st|
-	#~ StateData.tx_messaging_state_data.each do |st|
+	StateData.dev_tx_messaging_state_data.each do |st|
 	#~ StateData.rx_messaging_state_data.each do |st|
 	#~ StateData.main_state_data.each do |st|
-	StateData.main.each do |st|
+	#~ StateData.main.each do |st|
 		gvr[st[0].to_s.to_sym] [:label => st[0].to_s.gsub("_","\n")]
 		(gvr[st[0].to_s.to_sym] >> gvr[st[2].to_s.to_sym])[:label => st[1].to_s.gsub("_","\n")]
 	end	

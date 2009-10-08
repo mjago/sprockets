@@ -5,6 +5,9 @@ class StateData
   attr_reader :dev_tx_messaging_state_data
   attr_reader :dev_rx_messaging_state_data
   attr_reader :dev_main_state_data
+  attr_reader :tester_tx_messaging_state_data
+  attr_reader :tester_rx_messaging_state_data
+  attr_reader :tester_main_state_data
   attr_reader :main
 
   def self.test_state_data
@@ -81,6 +84,18 @@ class StateData
     ]
   end
   
+  def self.tester_tx_messaging_state_data
+    [
+     [:idle_state, :no_action!, :idle_state],
+    ]
+  end
+  
+  def self.tester_rx_messaging_state_data
+    [
+     [:idle_state, :no_action!, :idle_state],
+    ]
+  end
+  
   def self.dev_main_state_data
     [
      [:init_state, :initialised!, :contact_tester_state],
@@ -98,6 +113,21 @@ class StateData
      
      [:sent_tester_hash_state, :received_hash_ack!, :verify_tester_hash_state],
      [:sent_tester_hash_state, :received_hash_nak!, :send_tester_hash_state],     
+    ]
+  end
+
+	def self.tester_main_state_data
+    [
+     [:init_state, :initialised!, :listen_for_dev_state],
+
+		 [:listen_for_dev_state, :dev_unheard!, :listen_for_dev_state],
+     [:listen_for_dev_state, :dev_heard!, :contact_dev_state],
+     [:listen_for_dev_state, :listen_for_dev_timeout!, :init_state],
+     [:listen_for_dev_state, :listen_for_dev_timeout!, :init_state],
+		 
+		 [:contact_dev_state, :dev_not_contacted!, :contact_dev_state],
+		 [:contact_dev_state, :dev_contacted!, :process_tests_state],
+		 [:contact_dev_state, :dev_contact_timeout!, :listen_for_dev_state],
     ]
   end
 end

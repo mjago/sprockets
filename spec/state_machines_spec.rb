@@ -138,12 +138,10 @@ describe StateData do
         end
       end
     end
-    
 
-
-    ####################
-    # tx_message_states #
-    ####################
+    #########################
+    # dev_tx_message_states #
+    #########################
     
     describe "dev_tx_message_states" do
       it 'should have statemachine called dev_tx_message_states' do
@@ -342,9 +340,9 @@ describe StateData do
     end
 
     
-    ####################
-    # rx_message_states #
-    ####################
+    #########################
+    # dev_rx_message_states #
+    #########################
     
     describe "dev_rx_message_states" do
       it 'should have statemachine called dev_rx_message_states' do
@@ -386,6 +384,51 @@ describe StateData do
           @statemachine.dev_rx_message_states.async_rx_data!
           @statemachine.dev_rx_message_states.state.should == :idle_state
         end
+      end
+    end
+    
+    ############################
+    # tester_tx_message_states #
+    ############################
+    
+    describe "tester_tx_message_states" do
+      it 'should have statemachine called tester_tx_message_states' do
+        @statemachine.tester_tx_message_states.class.should == Statemachine::Statemachine
+      end
+      
+      describe 'idle_state' do
+        it 'is the initial state' do
+          @statemachine.tester_tx_message_states.state.should == :idle_state
+        end
+        
+        it 'is re-entrant given no_action!' do
+          @statemachine.tester_tx_message_states.no_action!
+          @statemachine.tester_tx_message_states.state.should == :idle_state
+        end
+        
+      end
+    end
+
+    
+    ############################
+    # tester_rx_message_states #
+    ############################
+    
+    describe "tester_rx_message_states" do
+      it 'should have statemachine called tester_rx_message_states' do
+        @statemachine.tester_rx_message_states.class.should == Statemachine::Statemachine
+      end
+      
+      describe 'idle_state' do
+        it 'is the initial state' do
+          @statemachine.tester_rx_message_states.state.should == :idle_state
+        end
+        
+        it 'is re-entrant given no_action!' do
+          @statemachine.tester_rx_message_states.no_action!
+          @statemachine.tester_rx_message_states.state.should == :idle_state
+        end
+        
       end
     end
     
@@ -490,6 +533,109 @@ describe StateData do
           @statemachine.dev_main_states.state.should == :send_tester_hash_state
         end
       end      
+    end
+    
+    ######################
+    # tester_main_states #
+    ######################
+    
+    describe "tester_main_states" do
+      it 'should have statemachine called tester_main_states' do
+        @statemachine.tester_main_states.class.should == Statemachine::Statemachine
+      end
+
+      describe 'init_state' do
+        it 'is the initial state' do
+          @statemachine.tester_main_states.state.should == :init_state
+        end
+        
+        it 'changes to listen_for_dev_state given initialised!' do
+          @statemachine.tester_main_states.initialised!
+          @statemachine.tester_main_states.state.should == :listen_for_dev_state
+        end
+        
+      end
+      
+      describe 'listen_for_dev_state' do
+        before do
+          @statemachine.tester_main_states.initialised!
+        end
+        
+        it 'is re-entrant given dev_unheard' do
+          @statemachine.tester_main_states.dev_unheard!
+          @statemachine.tester_main_states.state.should == :listen_for_dev_state
+        end
+        
+        it 'changes to contact_dev_state given dev_heard!' do
+          @statemachine.tester_main_states.dev_heard!
+          @statemachine.tester_main_states.state.should == :contact_dev_state
+        end
+        
+        it 'changes to init_state given listen_for_dev_timeout!' do
+          @statemachine.tester_main_states.listen_for_dev_timeout!
+          @statemachine.tester_main_states.state.should == :init_state
+        end
+      end      
+      
+      describe 'contact_dev_state' do
+        before do
+          @statemachine.tester_main_states.initialised!
+          @statemachine.tester_main_states.dev_heard!
+        end
+            
+        it 'is re-entrant given dev_not_contacted' do
+          @statemachine.tester_main_states.dev_not_contacted!
+          @statemachine.tester_main_states.state.should == :contact_dev_state
+        end
+        
+        it 'changes to process_tests_state given dev_contacted!' do
+          @statemachine.tester_main_states.dev_contacted!
+          @statemachine.tester_main_states.state.should == :process_tests_state
+        end
+        
+        it 'changes to listen_for_dev_state given dev_contact_timeout!' do
+          @statemachine.tester_main_states.dev_contact_timeout!
+          @statemachine.tester_main_states.state.should == :listen_for_dev_state
+        end
+      end
+      
+#       describe 'send_tester_hash_state' do
+#         before do
+#           @statemachine.tester_main_states.initialised!
+#           @statemachine.tester_main_states.tester_contacted!
+#           @statemachine.tester_main_states.tester_heard!
+#         end
+        
+#         it 'changes to sent_tester_hash_state on sent_hash_to_tester!' do
+#           @statemachine.tester_main_states.sent_hash_to_tester!
+#           @statemachine.tester_main_states.state.should == :sent_tester_hash_state
+#         end
+
+#         it 'changes to warning_hash_nak_overcount_state on retry_overcount!' do
+#           @statemachine.tester_main_states.retry_overcount!
+#           @statemachine.tester_main_states.state.should == :warning_hash_nak_overcount_state
+#         end
+
+#       end
+      
+#       describe 'sent_tester_hash_state' do
+#         before do
+#           @statemachine.tester_main_states.initialised!
+#           @statemachine.tester_main_states.tester_contacted!
+#           @statemachine.tester_main_states.tester_heard!
+#           @statemachine.tester_main_states.sent_hash_to_tester!
+#         end
+        
+#         it 'changes to verify_tester_hash_state given received_hash_ack!' do
+#           @statemachine.tester_main_states.received_hash_ack!
+#           @statemachine.tester_main_states.state.should == :verify_tester_hash_state
+#         end
+        
+#         it 'changes to send_tester_hash_state given received_hash_nak!' do
+#           @statemachine.tester_main_states.received_hash_nak!
+#           @statemachine.tester_main_states.state.should == :send_tester_hash_state
+#         end
+#      end      
     end
   end
 end
