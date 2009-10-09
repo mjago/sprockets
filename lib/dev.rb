@@ -1,17 +1,25 @@
+
 require 'socket'               # Get sockets from stdlib
 require 'find'
 require 'statemachine'
 require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','state_data'))
 require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','state_machines'))
-
+require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','process_timers'))
+	
 class Dev
 	attr_accessor :states
+	attr_accessor :state_timer
 	
 	def initialize
 	  @states = StateMachines.new
     @states.build_state_machine('dev_main_state_data')
     @states.build_state_machine('connection_state_data')
-    @tx_port = TCPServer.open(2001)  # Socket to listen on port 2000
+    @tx_port = TCPServer.open(2000)  # Socket to listen on port 2000
+		@timer = ProcessTimers.new
+		@timer.reset
+		@state_timer = 0
+		#~ @seconds_count = 0
+		#~ @time_started = Time.now
 	end
 	
 	def states
@@ -22,14 +30,21 @@ class Dev
     begin
       @tester_socket = @tx_port.accept_nonblock
     rescue
-			STDOUT.puts 'tester didn\'t respond'
+			#~ STDOUT.puts 'tester didn\'t respond'
       return false
     end
-    STDOUT.puts 'tester responded'
-    STDOUT.flush
     return true
   end
 
+	def process_timers
+		@state_timer = @timer.process_timers
+	end
+
+	def state_timer=(time)
+		@state_timer = time
+		@timer.reset
+	end
+	
 end
 
 class DevSocket
@@ -51,6 +66,7 @@ class DevSocket
 
   def listen_for_tester
     loop do
+			dev.process_timers
       STDOUT.puts "looking for tester"
       STDOUT.flush
       begin
@@ -68,21 +84,39 @@ end
 if $0 == __FILE__
   dev = Dev.new
 	loop do
-		STDOUT.puts dev.states.dev_main_states.state
-		STDOUT.flush
+		dev.process_timers
+		#~ STDOUT.puts dev.states.dev_main_states.state
+		#~ STDOUT.flush
 		case dev.states.dev_main_states.state
 			when :init_state
-				puts 'dev_main_state = init_state'
+				#~ puts 'dev_main_state = init_state'
 				dev.states.dev_main_states.initialised!
-		
+				dev.state_timer = 0
+				STDOUT.puts 'initialised! event'
+				STDOUT.flush
 			when :contact_tester_state
-				puts 'dev_main_state = contact_tester_state'
+				#~ puts 'dev_main_state = contact_tester_state'
 				if dev.contact_tester?
 					dev.states.dev_main_states.tester_contacted!
-					dev.states.connection_states.tx_only_state!
+					dev.states.connection_states.tx_detected!
+					STDOUT.puts 'tester_contacted! event'
+					STDOUT.flush
+				elsif dev.state_timer >= 5.0
+					dev.state_timer = 0.0
+					dev.states.dev_main_states.contact_tester_timeout!
+					STDOUT.puts 'contact_tester_timeout! event'
+					STDOUT.flush
 				end
 				
 			when :listen_for_tester_state
+			
+				if dev.state_timer >= 5.0
+					dev.state_timer = 0.0
+					dev.states.dev_main_states.tester_listening_timeout!
+					STDOUT.puts 'tester_listening_timeout! event'
+					STDOUT.flush
+				end
+				
 			
 		end
 		#~ sleep 1

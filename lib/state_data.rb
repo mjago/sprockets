@@ -113,6 +113,10 @@ class StateData
      
      [:sent_tester_hash_state, :received_hash_ack!, :verify_tester_hash_state],
      [:sent_tester_hash_state, :received_hash_nak!, :send_tester_hash_state],     
+		 
+		 [:warning_hash_nak_overcount_state,:PENDING!,:warning_hash_nak_overcount_state],
+		 
+		 [:verify_tester_hash_state,:PENDING!,:verify_tester_hash_state]
     ]
   end
 
