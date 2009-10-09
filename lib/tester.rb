@@ -3,6 +3,7 @@ require 'find'
 require 'statemachine'
 require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','state_data'))
 require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','state_machines'))
+require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','process_timers'))
 
 class Tester
 	def initialize
@@ -11,7 +12,10 @@ class Tester
     @states.build_state_machine('tester_main_state_data')
     @tx_port = TCPServer.open(2000)  # Socket to listen on port 2000
 		hostname = '192.168.10.57'
-	end
+    @timer = ProcessTimers.new
+		@timer.reset
+		@state_timer = 0
+		end
 
 	def states
 		@states
@@ -23,29 +27,21 @@ class Tester
 			STDOUT.flush
 			s = TCPSocket.open('192.168.10.57',2000)
 		rescue
-			STDOUT.puts 'failed to open'
-			STDOUT.flush
 			return false
 		end
 		STDOUT.puts 'listening to dev!'
 		STDOUT.flush
 		return true
 	end
-	#~ loop do
-		#~ begin
-			#~ STDOUT.puts "listening for dev"  
-			#~ STDOUT.flush
-			#~ s = TCPSocket.open(hostname,port)
-		#~ rescue
-			#~ STDOUT.puts 'failed to open'
-			#~ STDOUT.flush
-			#~ sleep 1
-			#~ next
-		#~ end
-			#~ STDOUT.puts 'opened!'
-			#~ STDOUT.flush
-			#~ exit 0
-	#~ end
+
+	def process_timers
+		@state_timer = @timer.process_timers
+	end
+
+	def state_timer=(time)
+		@state_timer = time
+		@timer.reset
+	end
   
 end
 
@@ -67,7 +63,7 @@ if $0 == __FILE__
 			when :listen_for_dev_state
 				if tester.listen_for_dev_state?
 					tester.states.tester_main_states.dev_heard!
-          STDOUT.puts 'dev heard!'
+          #~ STDOUT.puts 'dev heard!'
           STDOUT.flush 
 				else
 					tester.states.tester_main_states.dev_unheard!
