@@ -184,368 +184,389 @@ a {
   <dt id="example_group_1">StateData</dt>
     <script type="text/javascript">moveProgressBar('1.0');</script>
     <dd class="spec passed"><span class="passed_spec_name">exists as a class</span></dd>
-    <script type="text/javascript">moveProgressBar('2.1');</script>
+    <script type="text/javascript">moveProgressBar('2.0');</script>
     <dd class="spec passed"><span class="passed_spec_name">has a method called test_state_data</span></dd>
-    <script type="text/javascript">moveProgressBar('3.1');</script>
+    <script type="text/javascript">moveProgressBar('3.0');</script>
     <dd class="spec passed"><span class="passed_spec_name">has a method called connection_state_data</span></dd>
-    <script type="text/javascript">moveProgressBar('4.2');</script>
+    <script type="text/javascript">moveProgressBar('4.0');</script>
     <dd class="spec passed"><span class="passed_spec_name">has a method called tx_messaging_states_data</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_2">StateData StateMachines</dt>
-    <script type="text/javascript">moveProgressBar('5.2');</script>
+    <script type="text/javascript">moveProgressBar('5.1');</script>
     <dd class="spec passed"><span class="passed_spec_name">exists as a class</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_3">StateData StateMachines build_state_machine</dt>
-    <script type="text/javascript">moveProgressBar('6.3');</script>
+    <script type="text/javascript">moveProgressBar('6.1');</script>
     <dd class="spec passed"><span class="passed_spec_name">has a method called build_state_machine</span></dd>
-    <script type="text/javascript">moveProgressBar('7.3');</script>
+    <script type="text/javascript">moveProgressBar('7.1');</script>
     <dd class="spec passed"><span class="passed_spec_name">returns a state machine when passed a state machine data name</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_4">StateData StateMachines connection_states</dt>
-    <script type="text/javascript">moveProgressBar('8.4');</script>
+    <script type="text/javascript">moveProgressBar('8.1');</script>
     <dd class="spec passed"><span class="passed_spec_name">should have statemachine called connection_states</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_5">StateData StateMachines connection_states unconnected_state</dt>
-    <script type="text/javascript">moveProgressBar('9.4');</script>
+    <script type="text/javascript">moveProgressBar('9.1');</script>
     <dd class="spec passed"><span class="passed_spec_name">is the initial state</span></dd>
-    <script type="text/javascript">moveProgressBar('10.5');</script>
+    <script type="text/javascript">moveProgressBar('10.2');</script>
     <dd class="spec passed"><span class="passed_spec_name">is re-entrant following no_rx_detected!</span></dd>
-    <script type="text/javascript">moveProgressBar('11.5');</script>
+    <script type="text/javascript">moveProgressBar('11.2');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to :tx_only_state following tx_detected!</span></dd>
-    <script type="text/javascript">moveProgressBar('12.6');</script>
+    <script type="text/javascript">moveProgressBar('12.2');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to :rx_only_state following rx_detected!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_6">StateData StateMachines connection_states tx_only_state</dt>
-    <script type="text/javascript">moveProgressBar('13.6');</script>
+    <script type="text/javascript">moveProgressBar('13.2');</script>
     <dd class="spec passed"><span class="passed_spec_name">is re-entrant following tx_detected!</span></dd>
-    <script type="text/javascript">moveProgressBar('14.7');</script>
+    <script type="text/javascript">moveProgressBar('14.2');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to full_duplex_state following rx_detected!</span></dd>
-    <script type="text/javascript">moveProgressBar('15.7');</script>
+    <script type="text/javascript">moveProgressBar('15.3');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to unconnected_state following tx_dropped!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_7">StateData StateMachines connection_states rx_only_state</dt>
-    <script type="text/javascript">moveProgressBar('16.8');</script>
+    <script type="text/javascript">moveProgressBar('16.3');</script>
     <dd class="spec passed"><span class="passed_spec_name">is re-entrant following rx_detected!</span></dd>
-    <script type="text/javascript">moveProgressBar('17.8');</script>
+    <script type="text/javascript">moveProgressBar('17.3');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to full_duplex_state following tx_detected!</span></dd>
-    <script type="text/javascript">moveProgressBar('18.9');</script>
+    <script type="text/javascript">moveProgressBar('18.3');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to unconnected_state following rx_dropped!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_8">StateData StateMachines connection_states full_duplex_state</dt>
-    <script type="text/javascript">moveProgressBar('20.0');</script>
+    <script type="text/javascript">moveProgressBar('19.3');</script>
     <dd class="spec passed"><span class="passed_spec_name">is re-entrant following rx_detected!</span></dd>
-    <script type="text/javascript">moveProgressBar('21.0');</script>
+    <script type="text/javascript">moveProgressBar('20.4');</script>
     <dd class="spec passed"><span class="passed_spec_name">is re-entrant following tx_detected!</span></dd>
-    <script type="text/javascript">moveProgressBar('22.1');</script>
+    <script type="text/javascript">moveProgressBar('21.4');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to rx_only_state following tx_dropped!</span></dd>
-    <script type="text/javascript">moveProgressBar('23.1');</script>
+    <script type="text/javascript">moveProgressBar('22.4');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to tx_only_state following rx_dropped!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_9">StateData StateMachines dev_tx_message_states</dt>
-    <script type="text/javascript">moveProgressBar('24.2');</script>
+    <script type="text/javascript">moveProgressBar('23.4');</script>
     <dd class="spec passed"><span class="passed_spec_name">should have statemachine called dev_tx_message_states</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_10">StateData StateMachines dev_tx_message_states idle_state</dt>
-    <script type="text/javascript">moveProgressBar('25.2');</script>
+    <script type="text/javascript">moveProgressBar('24.4');</script>
     <dd class="spec passed"><span class="passed_spec_name">is the initial state</span></dd>
-    <script type="text/javascript">moveProgressBar('26.3');</script>
+    <script type="text/javascript">moveProgressBar('25.5');</script>
     <dd class="spec passed"><span class="passed_spec_name">is re-entrant given no_action!</span></dd>
-    <script type="text/javascript">moveProgressBar('27.3');</script>
+    <script type="text/javascript">moveProgressBar('26.5');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to sending_file_state given send_file!</span></dd>
-    <script type="text/javascript">moveProgressBar('28.4');</script>
+    <script type="text/javascript">moveProgressBar('27.5');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to deleting_file_state given delete_file!</span></dd>
-    <script type="text/javascript">moveProgressBar('29.4');</script>
+    <script type="text/javascript">moveProgressBar('28.5');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to sending_structure_state given send_structure!</span></dd>
-    <script type="text/javascript">moveProgressBar('30.5');</script>
+    <script type="text/javascript">moveProgressBar('29.5');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to sending_hash_state given send_hash!</span></dd>
-    <script type="text/javascript">moveProgressBar('31.5');</script>
+    <script type="text/javascript">moveProgressBar('30.6');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to sending_tick_state given send_tick!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_11">StateData StateMachines dev_tx_message_states sending_file_state</dt>
-    <script type="text/javascript">moveProgressBar('32.6');</script>
+    <script type="text/javascript">moveProgressBar('31.6');</script>
     <dd class="spec passed"><span class="passed_spec_name">is re-entrant given no_action!</span></dd>
-    <script type="text/javascript">moveProgressBar('33.6');</script>
+    <script type="text/javascript">moveProgressBar('32.6');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to idle_state following ack_received!</span></dd>
-    <script type="text/javascript">moveProgressBar('34.7');</script>
+    <script type="text/javascript">moveProgressBar('33.6');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to idle_state following nak_received!</span></dd>
-    <script type="text/javascript">moveProgressBar('35.7');</script>
+    <script type="text/javascript">moveProgressBar('34.6');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to idle_state following rx_timeout!</span></dd>
-    <script type="text/javascript">moveProgressBar('36.8');</script>
+    <script type="text/javascript">moveProgressBar('35.7');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to idle_state following rx_timeout!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_12">StateData StateMachines dev_tx_message_states deleting_file_state</dt>
-    <script type="text/javascript">moveProgressBar('37.8');</script>
+    <script type="text/javascript">moveProgressBar('36.7');</script>
     <dd class="spec passed"><span class="passed_spec_name">is re-entrant given no_action!</span></dd>
-    <script type="text/javascript">moveProgressBar('38.9');</script>
+    <script type="text/javascript">moveProgressBar('37.7');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to idle_state following ack_received!</span></dd>
-    <script type="text/javascript">moveProgressBar('40.0');</script>
+    <script type="text/javascript">moveProgressBar('38.7');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to idle_state following nak_received!</span></dd>
-    <script type="text/javascript">moveProgressBar('41.0');</script>
+    <script type="text/javascript">moveProgressBar('39.7');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to idle_state following rx_timeout!</span></dd>
-    <script type="text/javascript">moveProgressBar('42.1');</script>
+    <script type="text/javascript">moveProgressBar('40.8');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to idle_state following rx_timeout!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_13">StateData StateMachines dev_tx_message_states sending_structure_state</dt>
-    <script type="text/javascript">moveProgressBar('43.1');</script>
+    <script type="text/javascript">moveProgressBar('41.8');</script>
     <dd class="spec passed"><span class="passed_spec_name">is re-entrant given no_action!</span></dd>
-    <script type="text/javascript">moveProgressBar('44.2');</script>
+    <script type="text/javascript">moveProgressBar('42.8');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to idle_state following ack_received!</span></dd>
-    <script type="text/javascript">moveProgressBar('45.2');</script>
+    <script type="text/javascript">moveProgressBar('43.8');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to idle_state following nak_received!</span></dd>
-    <script type="text/javascript">moveProgressBar('46.3');</script>
+    <script type="text/javascript">moveProgressBar('44.8');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to idle_state following rx_timeout!</span></dd>
-    <script type="text/javascript">moveProgressBar('47.3');</script>
+    <script type="text/javascript">moveProgressBar('45.9');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to idle_state following rx_timeout!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_14">StateData StateMachines dev_tx_message_states sending_tick_state</dt>
-    <script type="text/javascript">moveProgressBar('48.4');</script>
+    <script type="text/javascript">moveProgressBar('46.9');</script>
     <dd class="spec passed"><span class="passed_spec_name">is re-entrant given no_action!</span></dd>
-    <script type="text/javascript">moveProgressBar('49.4');</script>
+    <script type="text/javascript">moveProgressBar('47.9');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to idle_state following ack_received!</span></dd>
-    <script type="text/javascript">moveProgressBar('50.5');</script>
+    <script type="text/javascript">moveProgressBar('48.9');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to idle_state following nak_received!</span></dd>
-    <script type="text/javascript">moveProgressBar('51.5');</script>
+    <script type="text/javascript">moveProgressBar('50.0');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to idle_state following rx_timeout!</span></dd>
-    <script type="text/javascript">moveProgressBar('52.6');</script>
+    <script type="text/javascript">moveProgressBar('51.0');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to idle_state following rx_timeout!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_15">StateData StateMachines dev_tx_message_states sending_hash_state</dt>
-    <script type="text/javascript">moveProgressBar('53.6');</script>
+    <script type="text/javascript">moveProgressBar('52.0');</script>
     <dd class="spec passed"><span class="passed_spec_name">is re-entrant given no_action!</span></dd>
-    <script type="text/javascript">moveProgressBar('54.7');</script>
+    <script type="text/javascript">moveProgressBar('53.0');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to idle_state following ack_received!</span></dd>
-    <script type="text/javascript">moveProgressBar('55.7');</script>
+    <script type="text/javascript">moveProgressBar('54.0');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to idle_state following nak_received!</span></dd>
-    <script type="text/javascript">moveProgressBar('56.8');</script>
+    <script type="text/javascript">moveProgressBar('55.1');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to idle_state following rx_timeout!</span></dd>
-    <script type="text/javascript">moveProgressBar('57.8');</script>
+    <script type="text/javascript">moveProgressBar('56.1');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes state to idle_state following rx_timeout!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_16">StateData StateMachines dev_rx_message_states</dt>
-    <script type="text/javascript">moveProgressBar('58.9');</script>
+    <script type="text/javascript">moveProgressBar('57.1');</script>
     <dd class="spec passed"><span class="passed_spec_name">should have statemachine called dev_rx_message_states</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_17">StateData StateMachines dev_rx_message_states idle_state</dt>
-    <script type="text/javascript">moveProgressBar('60.0');</script>
+    <script type="text/javascript">moveProgressBar('58.1');</script>
     <dd class="spec passed"><span class="passed_spec_name">is the initial state</span></dd>
-    <script type="text/javascript">moveProgressBar('61.0');</script>
+    <script type="text/javascript">moveProgressBar('59.1');</script>
     <dd class="spec passed"><span class="passed_spec_name">is re-entrant given no_action!</span></dd>
-    <script type="text/javascript">moveProgressBar('62.1');</script>
+    <script type="text/javascript">moveProgressBar('60.2');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes to testing_async_rx_state given test_async_rx!</span></dd>
-    <script type="text/javascript">moveProgressBar('63.1');</script>
+    <script type="text/javascript">moveProgressBar('61.2');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes to awaiting_ack_state given await_ack!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_18">StateData StateMachines dev_rx_message_states testing_async_rx_state</dt>
-    <script type="text/javascript">moveProgressBar('64.2');</script>
+    <script type="text/javascript">moveProgressBar('62.2');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes to idle_state following no_async_rx_data!</span></dd>
-    <script type="text/javascript">moveProgressBar('65.2');</script>
+    <script type="text/javascript">moveProgressBar('63.2');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes to idle_state following async_rx_data!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_19">StateData StateMachines tester_tx_message_states</dt>
-    <script type="text/javascript">moveProgressBar('66.3');</script>
+    <script type="text/javascript">moveProgressBar('64.2');</script>
     <dd class="spec passed"><span class="passed_spec_name">should have statemachine called tester_tx_message_states</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_20">StateData StateMachines tester_tx_message_states idle_state</dt>
-    <script type="text/javascript">moveProgressBar('67.3');</script>
+    <script type="text/javascript">moveProgressBar('65.3');</script>
     <dd class="spec passed"><span class="passed_spec_name">is the initial state</span></dd>
-    <script type="text/javascript">moveProgressBar('68.4');</script>
+    <script type="text/javascript">moveProgressBar('66.3');</script>
     <dd class="spec passed"><span class="passed_spec_name">is re-entrant given no_action!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_21">StateData StateMachines tester_rx_message_states</dt>
-    <script type="text/javascript">moveProgressBar('69.4');</script>
+    <script type="text/javascript">moveProgressBar('67.3');</script>
     <dd class="spec passed"><span class="passed_spec_name">should have statemachine called tester_rx_message_states</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_22">StateData StateMachines tester_rx_message_states idle_state</dt>
-    <script type="text/javascript">moveProgressBar('70.5');</script>
+    <script type="text/javascript">moveProgressBar('68.3');</script>
     <dd class="spec passed"><span class="passed_spec_name">is the initial state</span></dd>
-    <script type="text/javascript">moveProgressBar('71.5');</script>
+    <script type="text/javascript">moveProgressBar('69.3');</script>
     <dd class="spec passed"><span class="passed_spec_name">is re-entrant given no_action!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_23">StateData StateMachines dev_main_states</dt>
-    <script type="text/javascript">moveProgressBar('72.6');</script>
+    <script type="text/javascript">moveProgressBar('70.4');</script>
     <dd class="spec passed"><span class="passed_spec_name">should have statemachine called dev_main_states</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_24">StateData StateMachines dev_main_states init_state</dt>
-    <script type="text/javascript">moveProgressBar('73.6');</script>
+    <script type="text/javascript">moveProgressBar('71.4');</script>
     <dd class="spec passed"><span class="passed_spec_name">is the initial state</span></dd>
-    <script type="text/javascript">moveProgressBar('74.7');</script>
+    <script type="text/javascript">moveProgressBar('72.4');</script>
     <dd class="spec passed"><span class="passed_spec_name">is changes to contact_tester_state given initialised!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_25">StateData StateMachines dev_main_states contact_tester_state</dt>
-    <script type="text/javascript">moveProgressBar('75.7');</script>
+    <script type="text/javascript">moveProgressBar('73.4');</script>
     <dd class="spec passed"><span class="passed_spec_name">is re-entrant given tester_not_contacted</span></dd>
-    <script type="text/javascript">moveProgressBar('76.8');</script>
+    <script type="text/javascript">moveProgressBar('74.4');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes to listen_for_tester_state given tester_contacted!</span></dd>
-    <script type="text/javascript">moveProgressBar('77.8');</script>
+    <script type="text/javascript">moveProgressBar('75.5');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes to init_state given contact_tester_timeout!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
   <dt id="example_group_26">StateData StateMachines dev_main_states listen_for_tester_state</dt>
-    <script type="text/javascript">moveProgressBar('78.9');</script>
+    <script type="text/javascript">moveProgressBar('76.5');</script>
     <dd class="spec passed"><span class="passed_spec_name">is re-entrant given tester_unheard</span></dd>
-    <script type="text/javascript">moveProgressBar('80.0');</script>
-    <dd class="spec passed"><span class="passed_spec_name">changes to send_tester_tick_state given tester_heard</span></dd>
-    <script type="text/javascript">moveProgressBar('81.0');</script>
+    <script type="text/javascript">moveProgressBar('77.5');</script>
+    <dd class="spec passed"><span class="passed_spec_name">changes to full_duplex_state given tester_heard</span></dd>
+    <script type="text/javascript">moveProgressBar('78.5');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes to contact_tester_state given tester_listening_timeout!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
-  <dt id="example_group_27">StateData StateMachines dev_main_states send_tester_tick_state</dt>
-    <script type="text/javascript">moveProgressBar('82.1');</script>
-    <dd class="spec passed"><span class="passed_spec_name">changes to await_tick_ack_state on sent_tick_to_tester!</span></dd>
+  <dt id="example_group_27">StateData StateMachines dev_scheduler_states</dt>
+    <script type="text/javascript">moveProgressBar('79.5');</script>
+    <dd class="spec passed"><span class="passed_spec_name">should have statemachine called dev_scheduler_states</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
-  <dt id="example_group_28">StateData StateMachines dev_main_states await_tick_ack_state</dt>
-    <script type="text/javascript">moveProgressBar('83.1');</script>
-    <dd class="spec passed"><span class="passed_spec_name">changes to send_tester_tick_state given received_tick_ack!</span></dd>
-    <script type="text/javascript">moveProgressBar('84.2');</script>
+  <dt id="example_group_28">StateData StateMachines dev_scheduler_states is_tick_due_state</dt>
+    <script type="text/javascript">moveProgressBar('80.6');</script>
+    <dd class="spec passed"><span class="passed_spec_name">changes to send_tester_tick-state given tick_due!</span></dd>
+    <script type="text/javascript">moveProgressBar('81.6');</script>
+    <dd class="spec passed"><span class="passed_spec_name">changes to have_files_changed_state given tick_not_due!</span></dd>
+  </dl>
+</div>
+<div class="example_group">
+  <dl>
+  <dt id="example_group_29">StateData StateMachines dev_scheduler_states have_files_changed_state</dt>
+    <script type="text/javascript">moveProgressBar('82.6');</script>
+    <dd class="spec passed"><span class="passed_spec_name">should == :have_files_changed_state</span></dd>
+  </dl>
+</div>
+<div class="example_group">
+  <dl>
+  <dt id="example_group_30">StateData StateMachines dev_scheduler_states send_tick_state</dt>
+    <script type="text/javascript">moveProgressBar('83.6');</script>
+    <dd class="spec passed"><span class="passed_spec_name">changes to await_tick_ack_state given sent_tick!</span></dd>
+  </dl>
+</div>
+<div class="example_group">
+  <dl>
+  <dt id="example_group_31">StateData StateMachines dev_scheduler_states await_tick_ack_state</dt>
+    <script type="text/javascript">moveProgressBar('84.6');</script>
+    <dd class="spec passed"><span class="passed_spec_name">changes to have_files_changed_state given received_tick_ack!</span></dd>
+    <script type="text/javascript">moveProgressBar('85.7');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes to increment_tester_nak_state given received_tick_nak!</span></dd>
-    <script type="text/javascript">moveProgressBar('85.2');</script>
-    <dd class="spec passed"><span class="passed_spec_name">changes to init_state on await_tick_timeout!</span></dd>
+    <script type="text/javascript">moveProgressBar('86.7');</script>
+    <dd class="spec passed"><span class="passed_spec_name">changes to no_connection_state on await_tick_ack_timeout!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
-  <dt id="example_group_29">StateData StateMachines dev_main_states increment_tester_nak_state</dt>
-    <script type="text/javascript">moveProgressBar('86.3');</script>
-    <dd class="spec passed"><span class="passed_spec_name">changes to init_state given nak_overcount!</span></dd>
-    <script type="text/javascript">moveProgressBar('87.3');</script>
-    <dd class="spec passed"><span class="passed_spec_name">changes to send_tester_tick_state given not_nak_overcount!</span></dd>
-  </dl>
-</div>
-<div class="example_group">
-  <dl>
-  <dt id="example_group_30">StateData StateMachines tester_main_states</dt>
-    <script type="text/javascript">moveProgressBar('88.4');</script>
+  <dt id="example_group_32">StateData StateMachines tester_main_states</dt>
+    <script type="text/javascript">moveProgressBar('87.7');</script>
     <dd class="spec passed"><span class="passed_spec_name">should have statemachine called tester_main_states</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
-  <dt id="example_group_31">StateData StateMachines tester_main_states init_state</dt>
-    <script type="text/javascript">moveProgressBar('89.4');</script>
+  <dt id="example_group_33">StateData StateMachines tester_main_states init_state</dt>
+    <script type="text/javascript">moveProgressBar('88.7');</script>
     <dd class="spec passed"><span class="passed_spec_name">is the initial state</span></dd>
-    <script type="text/javascript">moveProgressBar('90.5');</script>
+    <script type="text/javascript">moveProgressBar('89.7');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes to listen_for_dev_state given initialised!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
-  <dt id="example_group_32">StateData StateMachines tester_main_states listen_for_dev_state</dt>
-    <script type="text/javascript">moveProgressBar('91.5');</script>
+  <dt id="example_group_34">StateData StateMachines tester_main_states listen_for_dev_state</dt>
+    <script type="text/javascript">moveProgressBar('90.8');</script>
     <dd class="spec passed"><span class="passed_spec_name">is re-entrant given dev_unheard</span></dd>
-    <script type="text/javascript">moveProgressBar('92.6');</script>
+    <script type="text/javascript">moveProgressBar('91.8');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes to contact_dev_state given dev_heard!</span></dd>
-    <script type="text/javascript">moveProgressBar('93.6');</script>
+    <script type="text/javascript">moveProgressBar('92.8');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes to init_state given listen_for_dev_timeout!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
-  <dt id="example_group_33">StateData StateMachines tester_main_states contact_dev_state</dt>
-    <script type="text/javascript">moveProgressBar('94.7');</script>
+  <dt id="example_group_35">StateData StateMachines tester_main_states contact_dev_state</dt>
+    <script type="text/javascript">moveProgressBar('93.8');</script>
     <dd class="spec passed"><span class="passed_spec_name">is re-entrant given dev_not_contacted</span></dd>
-    <script type="text/javascript">moveProgressBar('95.7');</script>
-    <dd class="spec passed"><span class="passed_spec_name">changes to await_tick_state given dev_contacted!</span></dd>
-    <script type="text/javascript">moveProgressBar('96.8');</script>
+    <script type="text/javascript">moveProgressBar('94.8');</script>
+    <dd class="spec passed"><span class="passed_spec_name">changes to full_duplex_state given dev_contacted!</span></dd>
+    <script type="text/javascript">moveProgressBar('95.9');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes to listen_for_dev_state given dev_contact_timeout!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
-  <dt id="example_group_34">StateData StateMachines tester_main_states await_tick_state</dt>
-    <script type="text/javascript">moveProgressBar('97.8');</script>
-    <dd class="spec passed"><span class="passed_spec_name">changes to send_tick_ack_state given tick_received!</span></dd>
-    <script type="text/javascript">moveProgressBar('98.9');</script>
-    <dd class="spec passed"><span class="passed_spec_name">changes to init_state given await_tick_timeout!</span></dd>
+  <dt id="example_group_36">StateData StateMachines tester_scheduler_states</dt>
+    <script type="text/javascript">moveProgressBar('96.9');</script>
+    <dd class="spec passed"><span class="passed_spec_name">should have statemachine called tester_scheduler_states</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
-  <dt id="example_group_35">StateData StateMachines tester_main_states send_tick_ack_state</dt>
-    <script type="text/javascript">moveProgressBar('100.0');</script>
-    <dd class="spec passed"><span class="passed_spec_name">changes to await_tick_state given tick_ack_sent!</span></dd>
+  <dt id="example_group_37">StateData StateMachines tester_scheduler_states idle_state</dt>
+    <script type="text/javascript">moveProgressBar('97.9');</script>
+    <dd class="spec passed"><span class="passed_spec_name">is re-entrant given no_action!</span></dd>
+    <script type="text/javascript">moveProgressBar('98.9');</script>
+    <dd class="spec passed"><span class="passed_spec_name">changes to send_tick_ack_state given tick_received!</span></dd>
   </dl>
 </div>
-<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>0.375 seconds</strong>";</script>
-<script type="text/javascript">document.getElementById('totals').innerHTML = "95 examples, 0 failures";</script>
+<div class="example_group">
+  <dl>
+  <dt id="example_group_38">StateData StateMachines tester_scheduler_states send_tick_ack_state</dt>
+    <script type="text/javascript">moveProgressBar('100.0');</script>
+    <dd class="spec passed"><span class="passed_spec_name">changes to idle_state given tick_ack_sent!</span></dd>
+  </dl>
+</div>
+<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>0.438 seconds</strong>";</script>
+<script type="text/javascript">document.getElementById('totals').innerHTML = "98 examples, 0 failures";</script>
 </div>
 </div>
 </body>

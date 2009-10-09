@@ -1,13 +1,15 @@
-
+ 
 class StateData
   attr_reader :test_state_data
   attr_reader :connection_state_data
   attr_reader :dev_tx_messaging_state_data
   attr_reader :dev_rx_messaging_state_data
   attr_reader :dev_main_state_data
+  attr_reader :dev_scheduler_state_data
   attr_reader :tester_tx_messaging_state_data
   attr_reader :tester_rx_messaging_state_data
   attr_reader :tester_main_state_data
+  attr_reader :tester_scheduler_state_data
   attr_reader :main
 
   def self.test_state_data
@@ -106,20 +108,8 @@ class StateData
      [:contact_tester_state, :contact_tester_timeout!, :init_state],
 
      [:listen_for_tester_state, :tester_unheard!, :listen_for_tester_state],
-     [:listen_for_tester_state, :tester_heard!, :send_tester_tick_state],
+     [:listen_for_tester_state, :tester_heard!, :full_duplex_state],
      [:listen_for_tester_state, :tester_listening_timeout!, :contact_tester_state],
-
-     [:send_tester_tick_state, :sent_tick_to_tester!, :await_tick_ack_state],
-     
-     [:await_tick_ack_state, :received_tick_ack!, :send_tester_tick_state],
-     [:await_tick_ack_state, :received_tick_nak!, :increment_tester_nak_state],     
-     [:await_tick_ack_state, :await_tick_timeout!, :init_state],     
-		 
-		 [:increment_tester_nak_state,:nak_overcount!,:init_state],
-		 [:increment_tester_nak_state,:not_nak_overcount!,:send_tester_tick_state],
-
-
-		 [:pending,:PENDING!,:pending]
     ]
   end
 
@@ -132,14 +122,39 @@ class StateData
      [:listen_for_dev_state, :listen_for_dev_timeout!, :init_state],
 		 
 		 [:contact_dev_state, :dev_not_contacted!, :contact_dev_state],
-		 [:contact_dev_state, :dev_contacted!, :await_tick_state],
+		 [:contact_dev_state, :dev_contacted!, :full_duplex_state],
 		 [:contact_dev_state, :dev_contact_timeout!, :listen_for_dev_state],
-		 
-		 [:await_tick_state, :tick_received!, :send_tick_ack_state],
-		 [:await_tick_state, :await_tick_timeout!, :init_state],
-
-		 [:send_tick_ack_state, :tick_ack_sent!, :await_tick_state],
-
     ]
   end
+
+	def self.dev_scheduler_state_data
+    [
+		 [:is_tick_due_state,:tick_not_due!,:have_files_changed_state],
+		 [:is_tick_due_state,:tick_due!,:send_tick_state],
+		 
+		 [:have_files_changed_state,:no_action!, :have_files_changed_state],
+		 
+     [:send_tick_state, :sent_tick!, :await_tick_ack_state],
+     
+     [:await_tick_ack_state, :received_tick_ack!, :have_files_changed_state],
+     [:await_tick_ack_state, :received_tick_nak!, :increment_tester_nak_state],     
+     [:await_tick_ack_state, :await_tick_ack_timeout!, :no_connection_state],     
+		 
+		 [:increment_tester_nak_state,:nak_overcount!,:init_state],
+		 [:increment_tester_nak_state,:not_nak_overcount!,:send_tick_state],
+
+
+		 [:pending,:PENDING!,:pending]
+		 
+    ]
+  end
+		
+	def self.tester_scheduler_state_data
+    [
+		 [:idle_state, :no_action!, :idle_state],
+		 [:idle_state, :tick_received!, :send_tick_ack_state],
+		 [:send_tick_ack_state,:tick_ack_sent!,:idle_state]
+    ]
+  end
+
 end
