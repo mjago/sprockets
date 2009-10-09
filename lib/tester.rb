@@ -6,11 +6,13 @@ require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','state_mach
 require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','process_timers'))
 
 class Tester
+  
+  attr_accessor :state_timer
 	def initialize
 	  @states = StateMachines.new
     @states.build_state_machine('connection_state_data')
     @states.build_state_machine('tester_main_state_data')
-    @tx_port = TCPServer.open(2000)  # Socket to listen on port 2000
+    @tx_port = TCPServer.open(2001)  # Socket to listen on port 2000
 		hostname = '192.168.10.57'
     @timer = ProcessTimers.new
 		@timer.reset
@@ -21,17 +23,23 @@ class Tester
 		@states
   end
 
-	def listen_for_dev_state?
+	def dev_contacted?
 		begin
-			STDOUT.puts "listening for dev"  
+      @dev_socket = @tx_port.accept_nonblock
+    rescue
+      return false
+    end
+    true
+  end
+
+	def listen_for_dev?
+		begin
 			STDOUT.flush
 			s = TCPSocket.open('192.168.10.57',2000)
 		rescue
 			return false
 		end
-		STDOUT.puts 'listening to dev!'
-		STDOUT.flush
-		return true
+		true
 	end
 
 	def process_timers
@@ -53,43 +61,42 @@ if $0 == __FILE__
 	#~ STDOUT.puts tester.states.tester_main_states.state
 	#~ STDOUT.flush
 	loop do
-		#~ STDOUT.puts tester.states.tester_main_states.state
-		#~ STDOUT.flush
+    tester.process_timers
 		case tester.states.tester_main_states.state
 			when :init_state
-				puts 'tester_main_state = init_state'
 				tester.states.tester_main_states.initialised!
+        STDOUT.puts 'initialised! event'
+        STDOUT.flush
+        tester.state_timer = 0
 
 			when :listen_for_dev_state
-				if tester.listen_for_dev_state?
+				if tester.listen_for_dev?
 					tester.states.tester_main_states.dev_heard!
-          #~ STDOUT.puts 'dev heard!'
-          STDOUT.flush 
-				else
+          STDOUT.puts 'dev_heard! event'
+          STDOUT.flush
+				elsif tester.state_timer > 3.0
+          tester.states.tester_main_states.listen_for_dev_timeout!
+          STDOUT.puts 'listen_for_dev_timeout! event'
+          STDOUT.flush
+        else
 					tester.states.tester_main_states.dev_unheard!
 				end
-				
-				#~ begin
-					#~ STDOUT.puts "listening for dev"  
-					#~ STDOUT.flush
-					#~ s = TCPSocket.open(hostname,port)
-				#~ rescue
-					#~ STDOUT.puts 'failed to open'
-					#~ STDOUT.flush
-					#~ sleep 1
-					#~ next
-				#~ end
-					#~ STDOUT.puts 'opened!'
-					#~ STDOUT.flush
-					#~ exit 0
-
-			when :contact_tester_state
-				puts 'tester_main_state = contact_tester_state'
-				if tester.contact_tester?
-					tester.states.tester_main_states.tester_contacted!
+        
+			when :contact_dev_state
+				if tester.dev_contacted?
+					tester.states.tester_main_states.dev_contacted!
+          STDOUT.puts 'dev_contacted! event'
+          STDOUT.flush
+				elsif tester.state_timer > 3.0
+          tester.states.tester_main_states.dev_contact_timeout!
+          STDOUT.puts 'dev_contact_timeout! event'
+          STDOUT.flush
+        else
+          tester.states.tester_main_states.dev_not_contacted!
 				end
 				
-			
+			when :process_tests_state
+      
 		end
 	end	
 end
