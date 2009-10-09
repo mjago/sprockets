@@ -4,7 +4,7 @@ require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','state_data
 require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','state_machines'))
 require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','process_timers'))
 
-TIMEOUT_PERIOD = 1.0
+TIMEOUT_PERIOD = 0.5
 DEBUG = true
 
 class Tester
@@ -24,6 +24,7 @@ class Tester
 		@timer.reset
 		@state_timer = 0
     @message = ''
+    @debug_count = 0
 		end
 
 	def states
@@ -70,6 +71,8 @@ class Tester
 
   def run_schedule
 	loop do
+#~ STDOUT.puts "state is #{self.main_state}"
+#~ STDOUT.flush
     self.process_timers
 		case self.main_state
 			when :init_state
@@ -90,22 +93,29 @@ class Tester
 				end
 				
 			when :await_tick_state
-        @message = self.dev_rx_socket.gets
+        begin
+          @message += self.dev_rx_socket.recv(4)
+        rescue
+          self.main_state_event(:await_tick_timeout!)
+        end
+        
         if @message 
-          STDOUT.puts "message received is #{@message}"
-          STDOUT.flush
+          #~ STDOUT.puts "message received is #{@message}"
+          #~ STDOUT.flush
           if @message.include?('tick')
-            self.main_state_event(:tick_received!)
             @message = ''
+            self.main_state_event(:tick_received!)
           end
-        elsif self.state_timer >= TIMEOUT_PERIOD
+        end  
+        if self.state_timer >= TIMEOUT_PERIOD
           @message = ''
           self.main_state_event(:await_tick_timeout!)
         end
         
       when :send_tick_ack_state
-        self.dev_tx_socket.puts 'tick_ack'
-          self.main_state_event(:tick_ack_sent!)
+          self.dev_tx_socket.puts 'tick_ack'
+          #~ self.dev_tx_socket.puts 'tick_akc'
+        self.main_state_event(:tick_ack_sent!)
       else
         puts "ERROR! Unknown tester_main_state #{self.main_state}"
         exit 1
