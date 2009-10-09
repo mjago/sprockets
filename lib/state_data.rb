@@ -81,6 +81,7 @@ class StateData
 
      [:testing_async_rx_state, :no_async_rx_data!, :idle_state],
      [:testing_async_rx_state, :async_rx_data!, :idle_state],
+		 [:awaiting_ack_state,:PENDING!,:awaiting_ack_state]
     ]
   end
   
@@ -105,18 +106,20 @@ class StateData
      [:contact_tester_state, :contact_tester_timeout!, :init_state],
 
      [:listen_for_tester_state, :tester_unheard!, :listen_for_tester_state],
-     [:listen_for_tester_state, :tester_heard!, :send_tester_hash_state],
+     [:listen_for_tester_state, :tester_heard!, :send_tester_tick_state],
      [:listen_for_tester_state, :tester_listening_timeout!, :contact_tester_state],
 
-     [:send_tester_hash_state, :sent_hash_to_tester!, :sent_tester_hash_state],
-     [:send_tester_hash_state, :retry_overcount!, :warning_hash_nak_overcount_state],
+     [:send_tester_tick_state, :sent_tick_to_tester!, :sent_tester_tick_state],
      
-     [:sent_tester_hash_state, :received_hash_ack!, :verify_tester_hash_state],
-     [:sent_tester_hash_state, :received_hash_nak!, :send_tester_hash_state],     
+     [:sent_tester_tick_state, :received_tick_ack!, :pending],
+     [:sent_tester_tick_state, :received_tick_nak!, :increment_tester_nak_state],     
+     [:sent_tester_tick_state, :await_tick_timeout!, :listen_for_tester_state],     
 		 
-		 [:warning_hash_nak_overcount_state,:PENDING!,:warning_hash_nak_overcount_state],
-		 
-		 [:verify_tester_hash_state,:PENDING!,:verify_tester_hash_state]
+		 [:increment_tester_nak_state,:nak_overcount!,:init_state],
+		 [:increment_tester_nak_state,:not_nak_overcount!,:send_tester_tick_state],
+
+
+		 [:pending,:PENDING!,:pending]
     ]
   end
 
@@ -127,11 +130,13 @@ class StateData
 		 [:listen_for_dev_state, :dev_unheard!, :listen_for_dev_state],
      [:listen_for_dev_state, :dev_heard!, :contact_dev_state],
      [:listen_for_dev_state, :listen_for_dev_timeout!, :init_state],
-     [:listen_for_dev_state, :listen_for_dev_timeout!, :init_state],
 		 
 		 [:contact_dev_state, :dev_not_contacted!, :contact_dev_state],
 		 [:contact_dev_state, :dev_contacted!, :process_tests_state],
 		 [:contact_dev_state, :dev_contact_timeout!, :listen_for_dev_state],
+		 
+		 [:process_tests_state, :PENDING!, :process_tests_state],
+		 
     ]
   end
 end

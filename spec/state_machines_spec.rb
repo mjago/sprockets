@@ -485,9 +485,9 @@ describe StateData do
           @statemachine.dev_main_states.state.should == :listen_for_tester_state
         end
         
-        it 'changes to send_tester_hash_state given tester_heard' do
+        it 'changes to send_tester_tick_state given tester_heard' do
           @statemachine.dev_main_states.tester_heard!
-          @statemachine.dev_main_states.state.should == :send_tester_hash_state
+          @statemachine.dev_main_states.state.should == :send_tester_tick_state
         end
         
         it 'changes to contact_tester_state given tester_listening_timeout!' do
@@ -496,42 +496,63 @@ describe StateData do
         end
       end
       
-      describe 'send_tester_hash_state' do
+      describe 'send_tester_tick_state' do
         before do
           @statemachine.dev_main_states.initialised!
           @statemachine.dev_main_states.tester_contacted!
           @statemachine.dev_main_states.tester_heard!
         end
         
-        it 'changes to sent_tester_hash_state on sent_hash_to_tester!' do
-          @statemachine.dev_main_states.sent_hash_to_tester!
-          @statemachine.dev_main_states.state.should == :sent_tester_hash_state
-        end
-
-        it 'changes to warning_hash_nak_overcount_state on retry_overcount!' do
-          @statemachine.dev_main_states.retry_overcount!
-          @statemachine.dev_main_states.state.should == :warning_hash_nak_overcount_state
+        it 'changes to sent_tester_tick_state on sent_tick_to_tester!' do
+          @statemachine.dev_main_states.sent_tick_to_tester!
+          @statemachine.dev_main_states.state.should == :sent_tester_tick_state
         end
 
       end
       
-      describe 'sent_tester_hash_state' do
+      describe 'sent_tester_tick_state' do
         before do
           @statemachine.dev_main_states.initialised!
           @statemachine.dev_main_states.tester_contacted!
           @statemachine.dev_main_states.tester_heard!
-          @statemachine.dev_main_states.sent_hash_to_tester!
+          @statemachine.dev_main_states.sent_tick_to_tester!
         end
         
-        it 'changes to verify_tester_hash_state given received_hash_ack!' do
-          @statemachine.dev_main_states.received_hash_ack!
-          @statemachine.dev_main_states.state.should == :verify_tester_hash_state
+        it 'changes to pending given pending!' do
+          @statemachine.dev_main_states.received_tick_ack!
+          @statemachine.dev_main_states.state.should == :pending
         end
         
-        it 'changes to send_tester_hash_state given received_hash_nak!' do
-          @statemachine.dev_main_states.received_hash_nak!
-          @statemachine.dev_main_states.state.should == :send_tester_hash_state
+        it 'changes to increment_tester_nak_state given received_tick_nak!' do
+          @statemachine.dev_main_states.received_tick_nak!
+          @statemachine.dev_main_states.state.should == :increment_tester_nak_state
         end
+        
+        it 'changes to listen_for_tester_state on await_tick_timeout!' do
+          @statemachine.dev_main_states.await_tick_timeout!
+          @statemachine.dev_main_states.state.should == :listen_for_tester_state
+        end
+      end      
+      
+      describe 'increment_tester_nak_state' do
+        before do
+          @statemachine.dev_main_states.initialised!
+          @statemachine.dev_main_states.tester_contacted!
+          @statemachine.dev_main_states.tester_heard!
+          @statemachine.dev_main_states.sent_tick_to_tester!
+          @statemachine.dev_main_states.received_tick_nak!
+        end
+        
+        it 'changes to init_state given nak_overcount!' do
+          @statemachine.dev_main_states.nak_overcount!
+          @statemachine.dev_main_states.state.should == :init_state
+        end
+        
+        it 'changes to send_tester_tick_state given not_nak_overcount!' do
+          @statemachine.dev_main_states.not_nak_overcount!
+          @statemachine.dev_main_states.state.should == :send_tester_tick_state
+        end
+        
       end      
     end
     
