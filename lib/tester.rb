@@ -8,15 +8,20 @@ require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','process_ti
 class Tester
   
   attr_accessor :state_timer
+  attr_accessor :dev_socket
+  attr_accessor :dev_tx_socket
+  attr_accessor :dev_rx_socket
+  
 	def initialize
 	  @states = StateMachines.new
     @states.build_state_machine('connection_state_data')
     @states.build_state_machine('tester_main_state_data')
     @tx_port = TCPServer.open(2001)  # Socket to listen on port 2000
 		hostname = '192.168.10.57'
-    @timer = Timers.new
+    @timer = ProcessTimers.new
 		@timer.reset
 		@state_timer = 0
+    @message = ''
 		end
 
 	def states
@@ -25,7 +30,7 @@ class Tester
 
 	def dev_contacted?
 		begin
-      @dev_socket = @tx_port.accept_nonblock
+      @dev_tx_socket = @tx_port.accept_nonblock
     rescue
       return false
     end
@@ -34,8 +39,7 @@ class Tester
 
 	def listen_for_dev?
 		begin
-			STDOUT.flush
-			s = TCPSocket.open('192.168.10.57',2000)
+			@dev_rx_socket = TCPSocket.open('192.168.10.57',2000)
 		rescue
 			return false
 		end
@@ -96,10 +100,31 @@ if $0 == __FILE__
 				end
 				
 			when :await_tick_state
-        if @message = tester.dev_socket.gets
-          puts @message
+        @message = tester.dev_rx_socket.gets
+        if @message 
+          STDOUT.puts "message received is #{@message}"
+          STDOUT.flush
+          if @message.include?('tick')
+            STDOUT.puts 'tick_received! event'
+            STDOUT.flush
+            tester.state_timer = 0
+            tester.states.tester_main_states.tick_received!
+            @message = ''
+          end
+        elsif tester.state_timer >= 3
+          @message = ''
+          tester.states.tester_main_states.await_tick_timeout!
+          tester.state_timer = 0
+          STDOUT.puts 'await_tick_timeout! event'
+          STDOUT.flush
         end
         
+      when :send_tick_ack_state
+        tester.dev_tx_socket.puts 'tick_ack'
+        tester.state_timer = 0
+        tester.states.tester_main_states.tick_ack_sent!
+          STDOUT.puts 'tick_ack_sent! event'
+          STDOUT.flush
       else
         puts "ERROR! Unknown tester_main_state #{tester.states.tester_main_states.state}"
         exit 1
