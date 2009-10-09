@@ -21,7 +21,7 @@ class Tester
 		begin
 			STDOUT.puts "listening for dev"  
 			STDOUT.flush
-			s = TCPSocket.open(hostname,port)
+			s = TCPSocket.open('192.168.10.57',2000)
 		rescue
 			STDOUT.puts 'failed to open'
 			STDOUT.flush
@@ -46,6 +46,7 @@ class Tester
 			#~ STDOUT.flush
 			#~ exit 0
 	#~ end
+  
 end
 
  
@@ -56,8 +57,8 @@ if $0 == __FILE__
 	#~ STDOUT.puts tester.states.tester_main_states.state
 	#~ STDOUT.flush
 	loop do
-		STDOUT.puts tester.states.tester_main_states.state
-		STDOUT.flush
+		#~ STDOUT.puts tester.states.tester_main_states.state
+		#~ STDOUT.flush
 		case tester.states.tester_main_states.state
 			when :init_state
 				puts 'tester_main_state = init_state'
@@ -66,6 +67,8 @@ if $0 == __FILE__
 			when :listen_for_dev_state
 				if tester.listen_for_dev_state?
 					tester.states.tester_main_states.dev_heard!
+          STDOUT.puts 'dev heard!'
+          STDOUT.flush 
 				else
 					tester.states.tester_main_states.dev_unheard!
 				end
