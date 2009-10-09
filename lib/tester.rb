@@ -28,6 +28,17 @@ class Tester
 		@states
   end
 
+	def main_state_event(new_event)
+		state_timer = 0
+		self.states.tester_main_states.send(new_event)
+		STDOUT.puts "#{new_event} event"
+		STDOUT.flush
+	end	
+
+	def main_state
+		self.states.tester_main_states.state
+	end
+
 	def dev_contacted?
 		begin
       @dev_tx_socket = @tx_port.accept_nonblock
@@ -62,7 +73,7 @@ if $0 == __FILE__
 	#~ STDOUT.flush
 	loop do
     tester.process_timers
-		case tester.states.tester_main_states.state
+		case tester.main_state
 			when :init_state
 				tester.states.tester_main_states.initialised!
         STDOUT.puts 'initialised! event'
