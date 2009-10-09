@@ -118,6 +118,8 @@ if $0 == __FILE__
 				if dev.listen_for_tester?
 					dev.state_timer = 0.0
 					dev.states.dev_main_states.tester_heard!
+					STDOUT.puts 'tester_heard! event'
+					STDOUT.flush
 				elsif dev.state_timer >= 5.0
 					dev.state_timer = 0.0
 					dev.states.dev_main_states.tester_listening_timeout!
@@ -129,9 +131,17 @@ if $0 == __FILE__
 				dev.tester_socket.puts 'tick'
 				dev.state_timer = 0.0
 				dev.states.dev_main_states.sent_tick_to_tester!
+				STDOUT.puts 'sent_tick_to_tester! event'
+				STDOUT.flush
 				
-			when :sent_tester_tick_state
-			
+			when :await_tick_ack_state
+				if dev.state_timer >= 3
+					dev.state_timer = 0.0
+					dev.states.dev_main_states.await_tick_timeout!
+					STDOUT.puts 'await_tick_timeout! event'
+					STDOUT.flush
+				end
+				
 			else
 				puts "ERROR! Unknown dev_main_state #{dev.states.dev_main_states.state}"
 			

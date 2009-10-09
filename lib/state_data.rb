@@ -109,11 +109,11 @@ class StateData
      [:listen_for_tester_state, :tester_heard!, :send_tester_tick_state],
      [:listen_for_tester_state, :tester_listening_timeout!, :contact_tester_state],
 
-     [:send_tester_tick_state, :sent_tick_to_tester!, :sent_tester_tick_state],
+     [:send_tester_tick_state, :sent_tick_to_tester!, :await_tick_ack_state],
      
-     [:sent_tester_tick_state, :received_tick_ack!, :pending],
-     [:sent_tester_tick_state, :received_tick_nak!, :increment_tester_nak_state],     
-     [:sent_tester_tick_state, :await_tick_timeout!, :listen_for_tester_state],     
+     [:await_tick_ack_state, :received_tick_ack!, :send_tester_tick_state],
+     [:await_tick_ack_state, :received_tick_nak!, :increment_tester_nak_state],     
+     [:await_tick_ack_state, :await_tick_timeout!, :init_state],     
 		 
 		 [:increment_tester_nak_state,:nak_overcount!,:init_state],
 		 [:increment_tester_nak_state,:not_nak_overcount!,:send_tester_tick_state],
@@ -136,7 +136,7 @@ class StateData
 		 [:contact_dev_state, :dev_contact_timeout!, :listen_for_dev_state],
 		 
 		 [:await_tick_state, :tick_received!, :send_tick_ack_state],
-		 [:await_tick_state, :tick_timeout!, :init_state],
+		 [:await_tick_state, :await_tick_timeout!, :init_state],
 
 		 [:send_tick_ack_state, :tick_ack_sent!, :await_tick_state],
 

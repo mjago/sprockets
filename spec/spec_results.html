@@ -467,18 +467,18 @@ a {
   <dl>
   <dt id="example_group_27">StateData StateMachines dev_main_states send_tester_tick_state</dt>
     <script type="text/javascript">moveProgressBar('82.1');</script>
-    <dd class="spec passed"><span class="passed_spec_name">changes to sent_tester_tick_state on sent_tick_to_tester!</span></dd>
+    <dd class="spec passed"><span class="passed_spec_name">changes to await_tick_ack_state on sent_tick_to_tester!</span></dd>
   </dl>
 </div>
 <div class="example_group">
   <dl>
-  <dt id="example_group_28">StateData StateMachines dev_main_states sent_tester_tick_state</dt>
+  <dt id="example_group_28">StateData StateMachines dev_main_states await_tick_ack_state</dt>
     <script type="text/javascript">moveProgressBar('83.1');</script>
-    <dd class="spec passed"><span class="passed_spec_name">changes to pending given pending!</span></dd>
+    <dd class="spec passed"><span class="passed_spec_name">changes to send_tester_tick_state given received_tick_ack!</span></dd>
     <script type="text/javascript">moveProgressBar('84.2');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes to increment_tester_nak_state given received_tick_nak!</span></dd>
     <script type="text/javascript">moveProgressBar('85.2');</script>
-    <dd class="spec passed"><span class="passed_spec_name">changes to listen_for_tester_state on await_tick_timeout!</span></dd>
+    <dd class="spec passed"><span class="passed_spec_name">changes to init_state on await_tick_timeout!</span></dd>
   </dl>
 </div>
 <div class="example_group">
@@ -534,7 +534,7 @@ a {
     <script type="text/javascript">moveProgressBar('97.8');</script>
     <dd class="spec passed"><span class="passed_spec_name">changes to send_tick_ack_state given tick_received!</span></dd>
     <script type="text/javascript">moveProgressBar('98.9');</script>
-    <dd class="spec passed"><span class="passed_spec_name">changes to init_state given tick_timeout!</span></dd>
+    <dd class="spec passed"><span class="passed_spec_name">changes to init_state given await_tick_timeout!</span></dd>
   </dl>
 </div>
 <div class="example_group">
@@ -544,7 +544,7 @@ a {
     <dd class="spec passed"><span class="passed_spec_name">changes to await_tick_state given tick_ack_sent!</span></dd>
   </dl>
 </div>
-<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>0.359 seconds</strong>";</script>
+<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>0.36 seconds</strong>";</script>
 <script type="text/javascript">document.getElementById('totals').innerHTML = "95 examples, 0 failures";</script>
 </div>
 </div>
