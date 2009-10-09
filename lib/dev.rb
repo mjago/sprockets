@@ -26,16 +26,20 @@ class Dev
 		@states
   end
 
-  def contact_tester?
+  def tester_contacted?
     begin
       @tester_socket = @tx_port.accept_nonblock
     rescue
 			#~ STDOUT.puts 'tester didn\'t respond'
       return false
     end
-    return true
+    true
   end
 
+	def listen_for_tester?
+		s = TCPSocket.open('192.168.10.91',3001)
+	end
+	
 	def process_timers
 		@state_timer = @timer.process_timers
 	end
@@ -64,21 +68,21 @@ class DevSocket
     return true
   end
 
-  def listen_for_tester
-    loop do
-			dev.process_timers
-      STDOUT.puts "looking for tester"
-      STDOUT.flush
-      begin
-        s = TCPSocket.open('192.168.10.91',3001)
+  #~ def listen_for_tester
+    #~ loop do
+			#~ dev.process_timers
+      #~ STDOUT.puts "looking for tester"
+      #~ STDOUT.flush
+      #~ begin
+        #~ s = TCPSocket.open('192.168.10.91',3001)
         
-        while line = s.gets do
-          puts line
-        end
-      end
-			#~ sleep 1
-		end
-  end
+        #~ while line = s.gets do
+          #~ puts line
+        #~ end
+      #~ end
+			sleep 1
+		#~ end
+  #~ end
 end
 
 if $0 == __FILE__
@@ -96,7 +100,7 @@ if $0 == __FILE__
 				STDOUT.flush
 			when :contact_tester_state
 				#~ puts 'dev_main_state = contact_tester_state'
-				if dev.contact_tester?
+				if dev.tester_contacted?
 					dev.states.dev_main_states.tester_contacted!
 					dev.states.connection_states.tx_detected!
 					STDOUT.puts 'tester_contacted! event'

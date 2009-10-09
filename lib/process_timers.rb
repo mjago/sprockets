@@ -7,7 +7,7 @@ class ProcessTimers
 	def process_timers
     time_running = (Time.now - @time_started)
     if time_running.to_i > @seconds_count
-			STDOUT.puts "@seconds_count = #{@seconds_count.to_i}"
+			STDOUT.puts "."
 			STDOUT.flush
 			@seconds_count = time_running.to_i
     end
