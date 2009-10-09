@@ -5,18 +5,22 @@ require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','state_data
 require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','state_machines'))
 require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','process_timers'))
 
-TIMEOUT_PERIOD = 1.0
+TIMEOUT_PERIOD = 0.5
 class Dev
 	attr_accessor :state_timer
 	attr_accessor :tester_tx_socket
 	attr_accessor :tester_rx_socket
-	
+
 	def initialize
 	  @states = StateMachines.new
     @states.build_state_machine('dev_main_state_data')
     @states.build_state_machine('connection_state_data')
-    @tx_port = TCPServer.open(2000)
 		@timer = ProcessTimers.new
+    @tx_port = TCPServer.open(2000)
+		@message = ''
+	end
+	
+	def initialise!
 	end
 	
 	def states
@@ -44,7 +48,12 @@ class Dev
   end
 
 	def listen_for_tester?
-		@tester_rx_socket = TCPSocket.open('192.168.10.91',2001)
+		begin
+		  @tester_rx_socket = TCPSocket.open('192.168.10.91',2001)
+		rescue
+			return false
+		end
+		true
 	end
 	
 	def process_timers
@@ -56,6 +65,7 @@ class Dev
 		self.process_timers
 		case self.main_state
 			when :init_state
+				self.initialise!
 				self.main_state_event(:initialised!)
 			when :contact_tester_state
 				if self.tester_contacted?
@@ -76,21 +86,27 @@ class Dev
 				self.main_state_event(:sent_tick_to_tester!)
 				
 			when :await_tick_ack_state
-				@message = self.tester_rx_socket.gets
+				begin
+					@message += self.tester_rx_socket.recv(4)
+					#~ @message += self.tester_rx_socket.gets
+				rescue
+					self.main_state_event(:await_tick_ack_timeout!)
+				end
 				if @message
-					STDOUT.puts "message received is #{@message}" if DEBUG
+					#~ STDOUT.puts "message received is #{@message}" if DEBUG
+					#~ STDOUT.flush if DEBUG
 					if @message.include?('tick_ack')
 						@message = ''
 						self.main_state_event(:received_tick_ack!)
 					end
-				elsif self.state_timer >= TIMEOUT_PERIOD
+				end
+				if self.state_timer >= TIMEOUT_PERIOD
 					@message = ''
-					self.main_state_event(:await_tick_timeout!)
+					self.main_state_event(:await_tick_ack_timeout!)
 				end
 				
 			else
 				puts "ERROR! Unknown dev_main_state #{self.main_state}"
-			
 		end
 	end	
 	end
