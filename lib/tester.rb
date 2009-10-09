@@ -1,9 +1,11 @@
 require 'socket'               # Get sockets from stdlib
 require 'find'
-require 'statemachine'
 require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','state_data'))
 require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','state_machines'))
 require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','process_timers'))
+
+TIMEOUT_PERIOD = 1.0
+DEBUG = true
 
 class Tester
   
@@ -29,10 +31,10 @@ class Tester
   end
 
 	def main_state_event(new_event)
-		state_timer = 0
+		@timer.reset
 		self.states.tester_main_states.send(new_event)
-		STDOUT.puts "#{new_event} event"
-		STDOUT.flush
+		STDOUT.puts "#{new_event} event" if DEBUG
+		STDOUT.flush if DEBUG
 	end	
 
 	def main_state
@@ -65,80 +67,54 @@ class Tester
 		@state_timer = time
 		@timer.reset
 	end
-end
 
-if $0 == __FILE__
-  tester = Tester.new
-	#~ STDOUT.puts tester.states.tester_main_states.state
-	#~ STDOUT.flush
+  def run_schedule
 	loop do
-    tester.process_timers
-		case tester.main_state
+    self.process_timers
+		case self.main_state
 			when :init_state
-				tester.states.tester_main_states.initialised!
-        STDOUT.puts 'initialised! event'
-        STDOUT.flush
-        tester.state_timer = 0
+				self.main_state_event(:initialised!)
 
 			when :listen_for_dev_state
-				if tester.listen_for_dev?
-					tester.states.tester_main_states.dev_heard!
-          tester.state_timer = 0
-          STDOUT.puts 'dev_heard! event'
-          STDOUT.flush
-				elsif tester.state_timer > 3.0
-          tester.state_timer = 0
-          tester.states.tester_main_states.listen_for_dev_timeout!
-          STDOUT.puts 'listen_for_dev_timeout! event'
-          STDOUT.flush
-        else
-					tester.states.tester_main_states.dev_unheard!
+				if self.listen_for_dev?
+          self.main_state_event(:dev_heard!)
+				elsif self.state_timer >= TIMEOUT_PERIOD
+          self.main_state_event(:listen_for_dev_timeout!)
 				end
         
 			when :contact_dev_state
-				if tester.dev_contacted?
-					tester.states.tester_main_states.dev_contacted!
-          tester.state_timer = 0
-          STDOUT.puts 'dev_contacted! event'
-          STDOUT.flush
-				elsif tester.state_timer > 3.0
-          tester.state_timer = 0
-          tester.states.tester_main_states.dev_contact_timeout!
-          STDOUT.puts 'dev_contact_timeout! event'
-          STDOUT.flush
-        else
-          tester.states.tester_main_states.dev_not_contacted!
+				if self.dev_contacted?
+          self.main_state_event(:dev_contacted!)
+				elsif self.state_timer >= TIMEOUT_PERIOD
+          self.main_state_event(:dev_contact_timeout!)
 				end
 				
 			when :await_tick_state
-        @message = tester.dev_rx_socket.gets
+        @message = self.dev_rx_socket.gets
         if @message 
           STDOUT.puts "message received is #{@message}"
           STDOUT.flush
           if @message.include?('tick')
-            STDOUT.puts 'tick_received! event'
-            STDOUT.flush
-            tester.state_timer = 0
-            tester.states.tester_main_states.tick_received!
+            self.main_state_event(:tick_received!)
             @message = ''
           end
-        elsif tester.state_timer >= 3
+        elsif self.state_timer >= TIMEOUT_PERIOD
           @message = ''
-          tester.states.tester_main_states.await_tick_timeout!
-          tester.state_timer = 0
-          STDOUT.puts 'await_tick_timeout! event'
-          STDOUT.flush
+          self.main_state_event(:await_tick_timeout!)
         end
         
       when :send_tick_ack_state
-        tester.dev_tx_socket.puts 'tick_ack'
-        tester.state_timer = 0
-        tester.states.tester_main_states.tick_ack_sent!
-          STDOUT.puts 'tick_ack_sent! event'
-          STDOUT.flush
+        self.dev_tx_socket.puts 'tick_ack'
+          self.main_state_event(:tick_ack_sent!)
       else
-        puts "ERROR! Unknown tester_main_state #{tester.states.tester_main_states.state}"
+        puts "ERROR! Unknown tester_main_state #{self.main_state}"
         exit 1
 		end
 	end	
+  end
+end
+
+if $0 == __FILE__
+  tester = Tester.new
+  tester.run_schedule
 end
