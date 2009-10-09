@@ -14,7 +14,7 @@ class Tester
     @states.build_state_machine('tester_main_state_data')
     @tx_port = TCPServer.open(2001)  # Socket to listen on port 2000
 		hostname = '192.168.10.57'
-    @timer = ProcessTimers.new
+    @timer = Timers.new
 		@timer.reset
 		@state_timer = 0
 		end
@@ -50,11 +50,7 @@ class Tester
 		@state_timer = time
 		@timer.reset
 	end
-  
 end
-
- 
-
 
 if $0 == __FILE__
   tester = Tester.new
@@ -72,9 +68,11 @@ if $0 == __FILE__
 			when :listen_for_dev_state
 				if tester.listen_for_dev?
 					tester.states.tester_main_states.dev_heard!
+          tester.state_timer = 0
           STDOUT.puts 'dev_heard! event'
           STDOUT.flush
 				elsif tester.state_timer > 3.0
+          tester.state_timer = 0
           tester.states.tester_main_states.listen_for_dev_timeout!
           STDOUT.puts 'listen_for_dev_timeout! event'
           STDOUT.flush
@@ -85,9 +83,11 @@ if $0 == __FILE__
 			when :contact_dev_state
 				if tester.dev_contacted?
 					tester.states.tester_main_states.dev_contacted!
+          tester.state_timer = 0
           STDOUT.puts 'dev_contacted! event'
           STDOUT.flush
 				elsif tester.state_timer > 3.0
+          tester.state_timer = 0
           tester.states.tester_main_states.dev_contact_timeout!
           STDOUT.puts 'dev_contact_timeout! event'
           STDOUT.flush
@@ -95,10 +95,14 @@ if $0 == __FILE__
           tester.states.tester_main_states.dev_not_contacted!
 				end
 				
-			when :process_tests_state
-      
+			when :await_tick_state
+        if @message = tester.dev_socket.gets
+          puts @message
+        end
+        
+      else
+        puts "ERROR! Unknown tester_main_state #{tester.states.tester_main_states.state}"
+        exit 1
 		end
 	end	
 end
-
-
