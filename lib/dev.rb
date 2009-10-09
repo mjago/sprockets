@@ -1,13 +1,12 @@
 
-require 'socket'               # Get sockets from stdlib
-require 'find'
-require 'statemachine'
+require 'socket'
+#~ require 'find'
 require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','state_data'))
 require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','state_machines'))
 require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','process_timers'))
-	
+
+TIMEOUT_PERIOD = 1.0
 class Dev
-	attr_accessor :states
 	attr_accessor :state_timer
 	attr_accessor :tester_tx_socket
 	attr_accessor :tester_rx_socket
@@ -18,8 +17,6 @@ class Dev
     @states.build_state_machine('connection_state_data')
     @tx_port = TCPServer.open(2000)
 		@timer = ProcessTimers.new
-		@timer.reset
-		@state_timer = 0
 	end
 	
 	def states
@@ -27,10 +24,10 @@ class Dev
   end
 
 	def main_state_event(new_event)
-		state_timer = 0
+		@timer.reset
 		self.states.dev_main_states.send(new_event)
-		STDOUT.puts "#{new_event} event"
-		STDOUT.flush
+		STDOUT.puts "#{new_event} event" if DEBUG
+		STDOUT.flush if DEBUG
 	end	
 
 	def main_state
@@ -54,55 +51,55 @@ class Dev
 		@state_timer = @timer.process_timers
 	end
 
-	def state_timer=(time)
-		@state_timer = time
-		@timer.reset
-	end
-	
-end
-
-if $0 == __FILE__
-  dev = Dev.new
+	def schedule
 	loop do
-		dev.process_timers
-		case dev.main_state
+		self.process_timers
+		case self.main_state
 			when :init_state
-				dev.main_state_event(:initialised!)
+				self.main_state_event(:initialised!)
 			when :contact_tester_state
-				if dev.tester_contacted?
-					dev.main_state_event(:tester_contacted!)
-				elsif dev.state_timer >= 5.0
-					dev.main_state_event(:contact_tester_timeout!)
+				if self.tester_contacted?
+					self.main_state_event(:tester_contacted!)
+				elsif self.state_timer >= TIMEOUT_PERIOD
+					self.main_state_event(:contact_tester_timeout!)
 				end
 				
 			when :listen_for_tester_state
-				if dev.listen_for_tester?
-					dev.main_state_event(:tester_heard!)
-				elsif dev.state_timer >= 5.0
-					dev.main_state_event(:tester_listening_timeout!)
+				if self.listen_for_tester?
+					self.main_state_event(:tester_heard!)
+				elsif self.state_timer >= TIMEOUT_PERIOD
+					self.main_state_event(:tester_listening_timeout!)
 				end
 				
 			when :send_tester_tick_state
-				dev.tester_tx_socket.puts 'tick'
-				dev.main_state_event(:sent_tick_to_tester!)
+				self.tester_tx_socket.puts 'tick'
+				self.main_state_event(:sent_tick_to_tester!)
 				
 			when :await_tick_ack_state
-				@message = dev.tester_rx_socket.gets
+				@message = self.tester_rx_socket.gets
 				if @message
-					STDOUT.puts "message received is #{@message}"
+					STDOUT.puts "message received is #{@message}" if DEBUG
 					if @message.include?('tick_ack')
-						dev.state_timer = 0.0
 						@message = ''
-						dev.main_state_event(:received_tick_ack!)
+						self.main_state_event(:received_tick_ack!)
 					end
-				elsif dev.state_timer >= 3
+				elsif self.state_timer >= TIMEOUT_PERIOD
 					@message = ''
-					dev.main_state_event(:await_tick_timeout!)
+					self.main_state_event(:await_tick_timeout!)
 				end
 				
 			else
-				puts "ERROR! Unknown dev_main_state #{dev.states.dev_main_states.state}"
+				puts "ERROR! Unknown dev_main_state #{self.main_state}"
 			
 		end
 	end	
+	end
 end
+
+if $0 == __FILE__
+	DEBUG = true
+  dev = Dev.new
+	dev.schedule
+end
+	
+	
