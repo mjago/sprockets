@@ -9,7 +9,8 @@ require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','process_ti
 class Dev
 	attr_accessor :states
 	attr_accessor :state_timer
-	attr_accessor :tester_socket
+	attr_accessor :tester_tx_socket
+	attr_accessor :tester_rx_socket
 	
 	def initialize
 	  @states = StateMachines.new
@@ -29,7 +30,7 @@ class Dev
 
   def tester_contacted?
     begin
-      @tester_socket = @tx_port.accept_nonblock
+      @tester_tx_socket = @tx_port.accept_nonblock
     rescue
 			#~ STDOUT.puts 'tester didn\'t respond'
       return false
@@ -38,7 +39,7 @@ class Dev
   end
 
 	def listen_for_tester?
-		s = TCPSocket.open('192.168.10.91',2001)
+		@tester_rx_socket = TCPSocket.open('192.168.10.91',2001)
 	end
 	
 	def process_timers
@@ -59,7 +60,7 @@ end
   
   #~ def tester_responded?
     #~ begin
-      #~ @tester_socket = @dev.accept_nonblock
+      #~ @tester_tx_socket = @dev.accept_nonblock
     #~ rescue
       #~ sleep 1
       #~ return false
@@ -128,19 +129,31 @@ if $0 == __FILE__
 				end
 				
 			when :send_tester_tick_state
-				dev.tester_socket.puts 'tick'
+				dev.tester_tx_socket.puts 'tick'
 				dev.state_timer = 0.0
 				dev.states.dev_main_states.sent_tick_to_tester!
 				STDOUT.puts 'sent_tick_to_tester! event'
 				STDOUT.flush
 				
 			when :await_tick_ack_state
-				if dev.state_timer >= 3
+				@message = dev.tester_rx_socket.gets
+				if @message
+					STDOUT.puts "message received is #{@message}"
+					if @message.include?('tick_ack')
+						dev.state_timer = 0.0
+						@message = ''
+						dev.states.dev_main_states.received_tick_ack!
+						STDOUT.puts 'await_tick_timeout! event'
+						STDOUT.flush
+					end
+				elsif dev.state_timer >= 3
 					dev.state_timer = 0.0
+					@message = ''
 					dev.states.dev_main_states.await_tick_timeout!
 					STDOUT.puts 'await_tick_timeout! event'
 					STDOUT.flush
 				end
+				
 				
 			else
 				puts "ERROR! Unknown dev_main_state #{dev.states.dev_main_states.state}"
