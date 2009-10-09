@@ -132,11 +132,14 @@ class StateData
      [:listen_for_dev_state, :listen_for_dev_timeout!, :init_state],
 		 
 		 [:contact_dev_state, :dev_not_contacted!, :contact_dev_state],
-		 [:contact_dev_state, :dev_contacted!, :process_tests_state],
+		 [:contact_dev_state, :dev_contacted!, :await_tick_state],
 		 [:contact_dev_state, :dev_contact_timeout!, :listen_for_dev_state],
 		 
-		 [:process_tests_state, :PENDING!, :process_tests_state],
-		 
+		 [:await_tick_state, :tick_received!, :send_tick_ack_state],
+		 [:await_tick_state, :tick_timeout!, :init_state],
+
+		 [:send_tick_ack_state, :tick_ack_sent!, :await_tick_state],
+
     ]
   end
 end

@@ -13,9 +13,13 @@ digraph draw_state_machine {
   contact_dev_state [label = "contact\ndev\nstate"];
   contact_dev_state -> contact_dev_state [label = "dev\nnot\ncontacted!"];
   contact_dev_state [label = "contact\ndev\nstate"];
-  contact_dev_state -> process_tests_state [label = "dev\ncontacted!"];
+  contact_dev_state -> await_tick_state [label = "dev\ncontacted!"];
   contact_dev_state [label = "contact\ndev\nstate"];
   contact_dev_state -> listen_for_dev_state [label = "dev\ncontact\ntimeout!"];
-  process_tests_state [label = "process\ntests\nstate"];
-  process_tests_state -> process_tests_state [label = "PENDING!"];
+  await_tick_state [label = "await\ntick\nstate"];
+  await_tick_state -> send_tick_ack_state [label = "tick\nreceived!"];
+  await_tick_state [label = "await\ntick\nstate"];
+  await_tick_state -> init_state [label = "tick\ntimeout!"];
+  send_tick_ack_state [label = "send\ntick\nack\nstate"];
+  send_tick_ack_state -> await_tick_state [label = "tick\nack\nsent!"];
 }

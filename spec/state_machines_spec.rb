@@ -609,14 +609,43 @@ describe StateData do
           @statemachine.tester_main_states.state.should == :contact_dev_state
         end
         
-        it 'changes to process_tests_state given dev_contacted!' do
+        it 'changes to await_tick_state given dev_contacted!' do
           @statemachine.tester_main_states.dev_contacted!
-          @statemachine.tester_main_states.state.should == :process_tests_state
+          @statemachine.tester_main_states.state.should == :await_tick_state
         end
         
         it 'changes to listen_for_dev_state given dev_contact_timeout!' do
           @statemachine.tester_main_states.dev_contact_timeout!
           @statemachine.tester_main_states.state.should == :listen_for_dev_state
+        end
+      end
+
+      describe 'await_tick_state' do
+        before do
+          @statemachine.tester_main_states.initialised!
+          @statemachine.tester_main_states.dev_heard!
+          @statemachine.tester_main_states.dev_contacted!
+        end
+        it 'changes to send_tick_ack_state given tick_received!' do
+          @statemachine.tester_main_states.tick_received!
+          @statemachine.tester_main_states.state.should == :send_tick_ack_state
+        end
+        it 'changes to init_state given tick_timeout!' do
+          @statemachine.tester_main_states.tick_timeout!
+          @statemachine.tester_main_states.state.should == :init_state
+        end
+      end
+
+      describe 'send_tick_ack_state' do
+        before do
+          @statemachine.tester_main_states.initialised!
+          @statemachine.tester_main_states.dev_heard!
+          @statemachine.tester_main_states.dev_contacted!
+          @statemachine.tester_main_states.tick_received!
+        end
+        it 'changes to await_tick_state given tick_ack_sent!' do
+          @statemachine.tester_main_states.tick_ack_sent!
+          @statemachine.tester_main_states.state.should == :await_tick_state
         end
       end
       

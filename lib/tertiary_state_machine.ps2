@@ -179,326 +179,410 @@ def
 %%EndSetup
 setupLatin1
 %%Page: 1 1
-%%PageBoundingBox: 36 36 260 784
+%%PageBoundingBox: 36 36 335 974
 %%PageOrientation: Portrait
-<< /PageSize [260 784] >> setpagedevice
+<< /PageSize [335 974] >> setpagedevice
 0 0 1 beginpage
 gsave
-36 36 224 748 boxprim clip newpath
+36 36 299 938 boxprim clip newpath
 1 1 set_scale 0 rotate 40 40 translate
-[ /CropBox [36 36 260 784] /PAGES pdfmark
+[ /CropBox [36 36 335 974] /PAGES pdfmark
 0.000 0.000 1.000 graphcolor
 newpath -4 -4 moveto
--4 744 lineto
-536 744 lineto
+-4 934 lineto
+536 934 lineto
 536 -4 lineto
 closepath fill
 1 setlinewidth
 0.000 0.000 1.000 graphcolor
 newpath -4 -4 moveto
--4 744 lineto
-536 744 lineto
+-4 934 lineto
+536 934 lineto
 536 -4 lineto
 closepath stroke
 0.000 0.000 0.000 graphcolor
 14.00 /Times-Roman set_font
-52.875 7.275 moveto 110.25 (Main State Machine) alignedtext
+89.875 7.275 moveto 110.25 (Main State Machine) alignedtext
 % init_state
 gsave
 0.537 0.247 0.902 nodecolor
-63 701 38.9222 38.9222 ellipse_path fill
+158 891 38.9222 38.9222 ellipse_path fill
 1 setlinewidth
 filled
 0.000 0.000 0.000 nodecolor
-63 701 38.9222 38.9222 ellipse_path stroke
+158 891 38.9222 38.9222 ellipse_path stroke
 0.667 1.000 0.502 nodecolor
 16.00 /verdana set_font
-50.625 705.35 moveto 24.75 (init) alignedtext
+145.625 895.35 moveto 24.75 (init) alignedtext
 0.667 1.000 0.502 nodecolor
 16.00 /verdana set_font
-43.125 686.6 moveto 39.75 (state) alignedtext
+138.125 876.6 moveto 39.75 (state) alignedtext
 grestore
 % listen_for_dev_state
 gsave
 0.537 0.247 0.902 nodecolor
-63 492 58.1882 58.1882 ellipse_path fill
+58 682 58.1882 58.1882 ellipse_path fill
 1 setlinewidth
 filled
 0.000 0.000 0.000 nodecolor
-63 492 58.1882 58.1882 ellipse_path stroke
+58 682 58.1882 58.1882 ellipse_path stroke
 0.667 1.000 0.502 nodecolor
 16.00 /verdana set_font
-41.625 515.1 moveto 42.75 (listen) alignedtext
+36.625 705.1 moveto 42.75 (listen) alignedtext
 0.667 1.000 0.502 nodecolor
 16.00 /verdana set_font
-52.125 496.35 moveto 21.75 (for) alignedtext
+47.125 686.35 moveto 21.75 (for) alignedtext
 0.667 1.000 0.502 nodecolor
 16.00 /verdana set_font
-48.75 477.6 moveto 28.5 (dev) alignedtext
+43.75 667.6 moveto 28.5 (dev) alignedtext
 0.667 1.000 0.502 nodecolor
 16.00 /verdana set_font
-43.125 458.85 moveto 39.75 (state) alignedtext
+38.125 648.85 moveto 39.75 (state) alignedtext
 grestore
 % init_state->listen_for_dev_state
 gsave
 1 setlinewidth
 0.333 1.000 1.000 edgecolor
-newpath 34 675 moveto
-25 666 17 656 12 644 curveto
-0 612 3 600 12 568 curveto
-14 560 18 553 22 546 curveto
+newpath 120 881 moveto
+97 872 69 858 55 834 curveto
+40 808 39 777 42 748 curveto
 stroke
 0.333 1.000 1.000 edgecolor
-newpath 25.2031 547.441 moveto
-27 537 lineto
-19.084 544.042 lineto
+newpath 45.4875 748.299 moveto
+43 738 lineto
+38.5222 747.602 lineto
 closepath fill
 1 setlinewidth
 solid
 0.333 1.000 1.000 edgecolor
-newpath 25.2031 547.441 moveto
-27 537 lineto
-19.084 544.042 lineto
+newpath 45.4875 748.299 moveto
+43 738 lineto
+38.5222 747.602 lineto
 closepath stroke
 0.333 1.000 0.392 edgecolor
 16.00 /verdana set_font
-15.125 600.975 moveto 81.75 (initialised!) alignedtext
+57.125 790.975 moveto 81.75 (initialised!) alignedtext
 grestore
 % listen_for_dev_state->init_state
 gsave
 1 setlinewidth
 0.333 1.000 1.000 edgecolor
-newpath 87 545 moveto
-89 553 92 560 93 568 curveto
-99 601 101 611 93 644 curveto
-92 649 90 654 88 659 curveto
+newpath 104 718 moveto
+116 729 128 743 136 758 curveto
+149 784 155 815 157 842 curveto
 stroke
 0.333 1.000 1.000 edgecolor
-newpath 84.8631 657.44 moveto
-84 668 lineto
-91.2598 660.283 lineto
+newpath 153.522 842.398 moveto
+158 852 lineto
+160.488 841.701 lineto
 closepath fill
 1 setlinewidth
 solid
 0.333 1.000 1.000 edgecolor
-newpath 84.8631 657.44 moveto
-84 668 lineto
-91.2598 660.283 lineto
+newpath 153.522 842.398 moveto
+158 852 lineto
+160.488 841.701 lineto
 closepath stroke
 0.333 1.000 0.392 edgecolor
 16.00 /verdana set_font
-109.625 629.1 moveto 42.75 (listen) alignedtext
+166.625 819.1 moveto 42.75 (listen) alignedtext
 0.333 1.000 0.392 edgecolor
 16.00 /verdana set_font
-120.125 610.35 moveto 21.75 (for) alignedtext
+177.125 800.35 moveto 21.75 (for) alignedtext
 0.333 1.000 0.392 edgecolor
 16.00 /verdana set_font
-116.75 591.6 moveto 28.5 (dev) alignedtext
+173.75 781.6 moveto 28.5 (dev) alignedtext
 0.333 1.000 0.392 edgecolor
 16.00 /verdana set_font
-97.625 572.85 moveto 66.75 (timeout!) alignedtext
+154.625 762.85 moveto 66.75 (timeout!) alignedtext
 grestore
 % listen_for_dev_state->listen_for_dev_state
 gsave
 1 setlinewidth
 0.333 1.000 1.000 edgecolor
-newpath 118 511 moveto
-130 509 139 503 139 492 curveto
-139 484 135 479 128 476 curveto
+newpath 113 701 moveto
+125 699 134 693 134 682 curveto
+134 674 130 669 123 666 curveto
 stroke
 0.333 1.000 1.000 edgecolor
-newpath 128.584 472.521 moveto
-118 473 lineto
-126.573 479.226 lineto
+newpath 123.584 662.521 moveto
+113 663 lineto
+121.573 669.226 lineto
 closepath fill
 1 setlinewidth
 solid
 0.333 1.000 1.000 edgecolor
-newpath 128.584 472.521 moveto
-118 473 lineto
-126.573 479.226 lineto
+newpath 123.584 662.521 moveto
+113 663 lineto
+121.573 669.226 lineto
 closepath stroke
 0.333 1.000 0.392 edgecolor
 16.00 /verdana set_font
-159.75 496.35 moveto 28.5 (dev) alignedtext
+154.75 686.35 moveto 28.5 (dev) alignedtext
 0.333 1.000 0.392 edgecolor
 16.00 /verdana set_font
-138.375 477.6 moveto 71.25 (unheard!) alignedtext
+133.375 667.6 moveto 71.25 (unheard!) alignedtext
 grestore
 % contact_dev_state
 gsave
 0.537 0.247 0.902 nodecolor
-63 290 52.1491 52.1491 ellipse_path fill
+58 480 52.1491 52.1491 ellipse_path fill
 1 setlinewidth
 filled
 0.000 0.000 0.000 nodecolor
-63 290 52.1491 52.1491 ellipse_path stroke
+58 480 52.1491 52.1491 ellipse_path stroke
 0.667 1.000 0.502 nodecolor
 16.00 /verdana set_font
-34.125 303.725 moveto 57.75 (contact) alignedtext
+29.125 493.725 moveto 57.75 (contact) alignedtext
 0.667 1.000 0.502 nodecolor
 16.00 /verdana set_font
-48.75 284.975 moveto 28.5 (dev) alignedtext
+43.75 474.975 moveto 28.5 (dev) alignedtext
 0.667 1.000 0.502 nodecolor
 16.00 /verdana set_font
-43.125 266.225 moveto 39.75 (state) alignedtext
+38.125 456.225 moveto 39.75 (state) alignedtext
 grestore
 % listen_for_dev_state->contact_dev_state
 gsave
 1 setlinewidth
 0.333 1.000 1.000 edgecolor
-newpath 35 441 moveto
-32 433 29 424 27 416 curveto
-22 391 22 384 27 360 curveto
-28 355 30 349 32 344 curveto
+newpath 57 624 moveto
+56 618 56 612 56 606 curveto
+56 581 56 574 56 550 curveto
+56 547 56 545 56 542 curveto
 stroke
 0.333 1.000 1.000 edgecolor
-newpath 35.1369 345.56 moveto
-36 335 lineto
-28.7402 342.717 lineto
+newpath 59.4875 542.299 moveto
+57 532 lineto
+52.5222 541.602 lineto
 closepath fill
 1 setlinewidth
 solid
 0.333 1.000 1.000 edgecolor
-newpath 35.1369 345.56 moveto
-36 335 lineto
-28.7402 342.717 lineto
+newpath 59.4875 542.299 moveto
+57 532 lineto
+52.5222 541.602 lineto
 closepath stroke
 0.333 1.000 0.392 edgecolor
 16.00 /verdana set_font
-41.75 392.35 moveto 28.5 (dev) alignedtext
+68.75 582.35 moveto 28.5 (dev) alignedtext
 0.333 1.000 0.392 edgecolor
 16.00 /verdana set_font
-30.125 373.6 moveto 51.75 (heard!) alignedtext
+57.125 563.6 moveto 51.75 (heard!) alignedtext
 grestore
 % contact_dev_state->listen_for_dev_state
 gsave
 1 setlinewidth
 0.333 1.000 1.000 edgecolor
-newpath 75 341 moveto
-76 347 77 354 78 360 curveto
-80 384 80 391 78 416 curveto
-78 419 77 422 77 425 curveto
+newpath 92 520 moveto
+98 529 104 539 107 550 curveto
+114 573 114 582 107 606 curveto
+105 613 102 620 98 627 curveto
 stroke
 0.333 1.000 1.000 edgecolor
-newpath 73.5292 424.508 moveto
-75 435 lineto
-80.3933 425.881 lineto
+newpath 94.7969 625.559 moveto
+93 636 lineto
+100.916 628.958 lineto
 closepath fill
 1 setlinewidth
 solid
 0.333 1.000 1.000 edgecolor
-newpath 73.5292 424.508 moveto
-75 435 lineto
-80.3933 425.881 lineto
+newpath 94.7969 625.559 moveto
+93 636 lineto
+100.916 628.958 lineto
 closepath stroke
 0.333 1.000 0.392 edgecolor
 16.00 /verdana set_font
-97.75 401.725 moveto 28.5 (dev) alignedtext
+130.75 591.725 moveto 28.5 (dev) alignedtext
 0.333 1.000 0.392 edgecolor
 16.00 /verdana set_font
-83.125 382.975 moveto 57.75 (contact) alignedtext
+116.125 572.975 moveto 57.75 (contact) alignedtext
 0.333 1.000 0.392 edgecolor
 16.00 /verdana set_font
-78.625 364.225 moveto 66.75 (timeout!) alignedtext
+111.625 554.225 moveto 66.75 (timeout!) alignedtext
 grestore
 % contact_dev_state->contact_dev_state
 gsave
 1 setlinewidth
 0.333 1.000 1.000 edgecolor
-newpath 113 306 moveto
-124 305 133 299 133 290 curveto
-133 284 129 279 123 277 curveto
+newpath 108 496 moveto
+119 495 128 489 128 480 curveto
+128 474 124 469 118 467 curveto
 stroke
 0.333 1.000 1.000 edgecolor
-newpath 123.584 273.521 moveto
-113 274 lineto
-121.573 280.226 lineto
+newpath 118.584 463.521 moveto
+108 464 lineto
+116.573 470.226 lineto
 closepath fill
 1 setlinewidth
 solid
 0.333 1.000 1.000 edgecolor
-newpath 123.584 273.521 moveto
-113 274 lineto
-121.573 280.226 lineto
+newpath 118.584 463.521 moveto
+108 464 lineto
+116.573 470.226 lineto
 closepath stroke
 0.333 1.000 0.392 edgecolor
 16.00 /verdana set_font
-159.75 303.725 moveto 28.5 (dev) alignedtext
+154.75 493.725 moveto 28.5 (dev) alignedtext
 0.333 1.000 0.392 edgecolor
 16.00 /verdana set_font
-161.25 284.975 moveto 25.5 (not) alignedtext
+156.25 474.975 moveto 25.5 (not) alignedtext
 0.333 1.000 0.392 edgecolor
 16.00 /verdana set_font
-132.375 266.225 moveto 83.25 (contacted!) alignedtext
+127.375 456.225 moveto 83.25 (contacted!) alignedtext
 grestore
-% process_tests_state
+% await_tick_state
 gsave
 0.537 0.247 0.902 nodecolor
-63 110 53.7726 53.7726 ellipse_path fill
+169 309 44.9324 44.9324 ellipse_path fill
 1 setlinewidth
 filled
 0.000 0.000 0.000 nodecolor
-63 110 53.7726 53.7726 ellipse_path stroke
+169 309 44.9324 44.9324 ellipse_path stroke
 0.667 1.000 0.502 nodecolor
 16.00 /verdana set_font
-32.625 123.725 moveto 60.75 (process) alignedtext
+147.625 322.725 moveto 42.75 (await) alignedtext
 0.667 1.000 0.502 nodecolor
 16.00 /verdana set_font
-43.875 104.975 moveto 38.25 (tests) alignedtext
+155.125 303.975 moveto 27.75 (tick) alignedtext
 0.667 1.000 0.502 nodecolor
 16.00 /verdana set_font
-43.125 86.225 moveto 39.75 (state) alignedtext
+149.125 285.225 moveto 39.75 (state) alignedtext
 grestore
-% contact_dev_state->process_tests_state
+% contact_dev_state->await_tick_state
 gsave
 1 setlinewidth
 0.333 1.000 1.000 edgecolor
-newpath 63 238 moveto
-63 218 63 196 63 174 curveto
+newpath 87 436 moveto
+102 411 122 380 138 356 curveto
 stroke
 0.333 1.000 1.000 edgecolor
-newpath 66.5001 174 moveto
-63 164 lineto
-59.5001 174 lineto
+newpath 141.365 357.262 moveto
+144 347 lineto
+135.541 353.379 lineto
 closepath fill
 1 setlinewidth
 solid
 0.333 1.000 1.000 edgecolor
-newpath 66.5001 174 moveto
-63 164 lineto
-59.5001 174 lineto
+newpath 141.365 357.262 moveto
+144 347 lineto
+135.541 353.379 lineto
 closepath stroke
 0.333 1.000 0.392 edgecolor
 16.00 /verdana set_font
-89.75 205.35 moveto 28.5 (dev) alignedtext
+152.75 395.35 moveto 28.5 (dev) alignedtext
 0.333 1.000 0.392 edgecolor
 16.00 /verdana set_font
-62.375 186.6 moveto 83.25 (contacted!) alignedtext
+125.375 376.6 moveto 83.25 (contacted!) alignedtext
 grestore
-% process_tests_state->process_tests_state
+% await_tick_state->init_state
 gsave
 1 setlinewidth
 0.333 1.000 1.000 edgecolor
-newpath 115 126 moveto
-126 125 135 119 135 110 curveto
-135 104 131 99 125 97 curveto
+newpath 197 344 moveto
+203 353 209 362 213 372 curveto
+222 395 218 402 220 428 curveto
+230 574 223 611 225 758 curveto
+225 791 239 803 225 834 curveto
+219 846 210 856 200 865 curveto
 stroke
 0.333 1.000 1.000 edgecolor
-newpath 125.584 93.5212 moveto
-115 94 lineto
-123.573 100.226 lineto
+newpath 197.9 862.2 moveto
+192 871 lineto
+202.1 867.8 lineto
 closepath fill
 1 setlinewidth
 solid
 0.333 1.000 1.000 edgecolor
-newpath 125.584 93.5212 moveto
-115 94 lineto
-123.573 100.226 lineto
+newpath 197.9 862.2 moveto
+192 871 lineto
+202.1 867.8 lineto
 closepath stroke
 0.333 1.000 0.392 edgecolor
 16.00 /verdana set_font
-134.25 104.975 moveto 79.5 (PENDING!) alignedtext
+244.125 582.35 moveto 27.75 (tick) alignedtext
+0.333 1.000 0.392 edgecolor
+16.00 /verdana set_font
+224.625 563.6 moveto 66.75 (timeout!) alignedtext
+grestore
+% send_tick_ack_state
+gsave
+0.537 0.247 0.902 nodecolor
+169 114 58.1882 58.1882 ellipse_path fill
+1 setlinewidth
+filled
+0.000 0.000 0.000 nodecolor
+169 114 58.1882 58.1882 ellipse_path stroke
+0.667 1.000 0.502 nodecolor
+16.00 /verdana set_font
+150.25 137.1 moveto 37.5 (send) alignedtext
+0.667 1.000 0.502 nodecolor
+16.00 /verdana set_font
+155.125 118.35 moveto 27.75 (tick) alignedtext
+0.667 1.000 0.502 nodecolor
+16.00 /verdana set_font
+155.5 99.6 moveto 27 (ack) alignedtext
+0.667 1.000 0.502 nodecolor
+16.00 /verdana set_font
+149.125 80.85 moveto 39.75 (state) alignedtext
+grestore
+% await_tick_state->send_tick_ack_state
+gsave
+1 setlinewidth
+0.333 1.000 1.000 edgecolor
+newpath 138 276 moveto
+132 267 126 257 122 246 curveto
+114 222 115 213 122 190 curveto
+124 183 126 177 129 170 curveto
+stroke
+0.333 1.000 1.000 edgecolor
+newpath 132.203 171.441 moveto
+134 161 lineto
+126.084 168.042 lineto
+closepath fill
+1 setlinewidth
+solid
+0.333 1.000 1.000 edgecolor
+newpath 132.203 171.441 moveto
+134 161 lineto
+126.084 168.042 lineto
+closepath stroke
+0.333 1.000 0.392 edgecolor
+16.00 /verdana set_font
+144.125 222.35 moveto 27.75 (tick) alignedtext
+0.333 1.000 0.392 edgecolor
+16.00 /verdana set_font
+121.25 203.6 moveto 73.5 (received!) alignedtext
+grestore
+% send_tick_ack_state->await_tick_state
+gsave
+1 setlinewidth
+0.333 1.000 1.000 edgecolor
+newpath 190 168 moveto
+192 175 194 183 195 190 curveto
+199 214 199 221 195 246 curveto
+194 250 193 254 192 258 curveto
+stroke
+0.333 1.000 1.000 edgecolor
+newpath 188.464 257.415 moveto
+188 268 lineto
+194.964 260.015 lineto
+closepath fill
+1 setlinewidth
+solid
+0.333 1.000 1.000 edgecolor
+newpath 188.464 257.415 moveto
+188 268 lineto
+194.964 260.015 lineto
+closepath stroke
+0.333 1.000 0.392 edgecolor
+16.00 /verdana set_font
+203.125 231.725 moveto 27.75 (tick) alignedtext
+0.333 1.000 0.392 edgecolor
+16.00 /verdana set_font
+203.5 212.975 moveto 27 (ack) alignedtext
+0.333 1.000 0.392 edgecolor
+16.00 /verdana set_font
+197.125 194.225 moveto 39.75 (sent!) alignedtext
 grestore
 endpage
 showpage
@@ -507,7 +591,7 @@ grestore
 %%EndPage: 1
 %%Trailer
 %%Pages: 1
-%%BoundingBox: 36 36 260 784
+%%BoundingBox: 36 36 335 974
 end
 restore
 %%EOF

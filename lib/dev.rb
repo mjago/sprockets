@@ -9,6 +9,7 @@ require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','process_ti
 class Dev
 	attr_accessor :states
 	attr_accessor :state_timer
+	attr_accessor :tester_socket
 	
 	def initialize
 	  @states = StateMachines.new
@@ -37,7 +38,7 @@ class Dev
   end
 
 	def listen_for_tester?
-		s = TCPSocket.open('192.168.10.91',3001)
+		s = TCPSocket.open('192.168.10.91',2001)
 	end
 	
 	def process_timers
@@ -51,22 +52,22 @@ class Dev
 	
 end
 
-class DevSocket
-  def contact_tester(port)
-    @dev = TCPServer.open(port)  # Socket to listen on port 2000
-  end
+#~ class DevSocket
+  #~ def contact_tester(port)
+    #~ @dev = TCPServer.open(port)  # Socket to listen on port 2000
+  #~ end
   
-  def tester_responded?
-    begin
-      @tester_socket = @dev.accept_nonblock
-    rescue
+  #~ def tester_responded?
+    #~ begin
+      #~ @tester_socket = @dev.accept_nonblock
+    #~ rescue
       #~ sleep 1
-      return false
-    end
-    STDOUT.puts 'tester responded'
-    STDOUT.flush
-    return true
-  end
+      #~ return false
+    #~ end
+    #~ STDOUT.puts 'tester responded'
+    #~ STDOUT.flush
+    #~ return true
+  #~ end
 
   #~ def listen_for_tester
     #~ loop do
@@ -83,7 +84,7 @@ class DevSocket
 			sleep 1
 		#~ end
   #~ end
-end
+#~ end
 
 if $0 == __FILE__
   dev = Dev.new
@@ -101,6 +102,7 @@ if $0 == __FILE__
 			when :contact_tester_state
 				#~ puts 'dev_main_state = contact_tester_state'
 				if dev.tester_contacted?
+					dev.state_timer = 0.0
 					dev.states.dev_main_states.tester_contacted!
 					dev.states.connection_states.tx_detected!
 					STDOUT.puts 'tester_contacted! event'
@@ -113,14 +115,25 @@ if $0 == __FILE__
 				end
 				
 			when :listen_for_tester_state
-			
-				if dev.state_timer >= 5.0
+				if dev.listen_for_tester?
+					dev.state_timer = 0.0
+					dev.states.dev_main_states.tester_heard!
+				elsif dev.state_timer >= 5.0
 					dev.state_timer = 0.0
 					dev.states.dev_main_states.tester_listening_timeout!
 					STDOUT.puts 'tester_listening_timeout! event'
 					STDOUT.flush
 				end
 				
+			when :send_tester_tick_state
+				dev.tester_socket.puts 'tick'
+				dev.state_timer = 0.0
+				dev.states.dev_main_states.sent_tick_to_tester!
+				
+			when :sent_tester_tick_state
+			
+			else
+				puts "ERROR! Unknown dev_main_state #{dev.states.dev_main_states.state}"
 			
 		end
 		#~ sleep 1
