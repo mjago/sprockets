@@ -1,9 +1,4 @@
 
-
-<<<<<<< HEAD:lib/dev.rb
-
-=======
->>>>>>> 005a3401fa9f8ff9fc81840bba659d0c401b41b8:lib/dev.rb
 require 'socket'
 #~ require 'find'
 require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','state_data'))
