@@ -26,7 +26,8 @@ class Dev
   def states
     @states
   end
-
+  #
+  
   def main_state_event(new_event)
     @timer.reset
     self.states.dev_main_states.send(new_event)
