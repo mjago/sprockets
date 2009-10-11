@@ -1,5 +1,4 @@
 
-
 require 'socket'
 #~ require 'find'
 require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','state_data'))
@@ -27,7 +26,6 @@ class Dev
   def states
     @states
   end
-  #
   
   def main_state_event(new_event)
     @timer.reset
@@ -48,7 +46,6 @@ class Dev
     end
     true
   end
-
   
   def listen_for_tester?
     begin
