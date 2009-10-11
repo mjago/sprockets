@@ -26,7 +26,7 @@ class Dev
   def states
     @states
   end
-  
+
   def main_state_event(new_event)
     @timer.reset
     self.states.dev_main_states.send(new_event)
@@ -46,7 +46,7 @@ class Dev
     end
     true
   end
-  
+
   def listen_for_tester?
     begin
       @tester_rx_socket = TCPSocket.open('192.168.10.91',2001)
