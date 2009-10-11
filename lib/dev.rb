@@ -49,6 +49,7 @@ class Dev
     true
   end
 
+  
   def listen_for_tester?
     begin
       @tester_rx_socket = TCPSocket.open('192.168.10.91',2001)
