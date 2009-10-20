@@ -1,0 +1,39 @@
+#~ ---
+#~ folder1
+#~ - folder2
+#~ - - file1.txt
+#~ - - file2.txt
+#~ - - file3.txt
+#~ - - folder3
+#~ - - - file4.txt
+#~ - - - file5.txt
+#~ - folder4
+#~ - - file6.txt
+#~ ---
+#~ letters to:
+  #~ "Hank Bros.: the Car Wash!": 1
+  #~ Jim O"Connor: 2
+  #~ Myself: 
+    #~ "diary":
+      #~ "daily entry":
+        #~ "morning"
+      #~ "weekly entry":
+        #~ "christmas"---
+folder1:
+  folder2:
+   file1:
+    time: "10-30"
+    size: "12345"
+  folder3:
+   file2:
+   time: "10-30"
+   size: "12345"
+  folder4:
+   folder5:
+    file3:
+    time: "10-30"
+    size: "12345"
+      #~ file2:
+       #~ time: "11-30"
+        #~ size: "23456"
+        

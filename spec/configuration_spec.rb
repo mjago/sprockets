@@ -1,7 +1,12 @@
 
 require 'statemachine'
-require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','state_data'))
-require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','state_machines'))
+require File.expand_path(File.join(
+        File.dirname(__FILE__),'..','lib','state_data'))
+require File.expand_path(File.join(
+        File.dirname(__FILE__),'..','lib','state_machines'))
+
+CONFIG_FILE = File.expand_path(File.join(
+        File.dirname(__FILE__),'..','lib','config.yml'))
 
 describe "Configuration" do
   
@@ -9,7 +14,6 @@ describe "Configuration" do
     @config = YAML.load_file(CONFIG_FILE)
   end
 
-  CONFIG_FILE = './../lib/config.yml' 
   it "can see a configuration file called config.yml" do
     File.file?(CONFIG_FILE).should == true
   end

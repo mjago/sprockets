@@ -1,0 +1,17 @@
+digraph comms_driver_state_machine {
+  graph [bgcolor = white, label = "\n\nComms Driver State Machine", rankdir = "UD"];
+  edge [color = green, fontcolor = darkgreen, fontname = "verdana", fontsize = "16", url = "http://google.com"];
+  node [color = black, fillcolor = lightblue, fontcolor = navyblue, fontname = "verdana", fontsize = "16", shape = circle, style = filled, url = "http://google.com"];
+  init_state [label = "init\nstate"];
+  init_state -> idle_state [label = "initialised!"];
+  idle_state [label = "idle\nstate"];
+  idle_state -> idle_state [label = "no\ndata!"];
+  idle_state [label = "idle\nstate"];
+  idle_state -> check_range_state [label = "data\nreceived!"];
+  check_range_state [label = "check\nrange\nstate"];
+  check_range_state -> range_error_state [label = "range\nerror!"];
+  check_range_state [label = "check\nrange\nstate"];
+  check_range_state -> store_in_buffer_state [label = "no\nrange\nerror!"];
+  range_error_state [label = "range\nerror\nstate"];
+  range_error_state -> flush_buffer_state [label = "range\nerror\nlogged!"];
+}

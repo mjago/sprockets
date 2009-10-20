@@ -1,0 +1,12 @@
+require 'win32console'
+#begin 
+#  require "Win32/Console/ANSI" if PLATFORM =~ /Win32/
+#rescue LoadError
+#  raise 'You must gem install win32console to use color on Windows'
+#end
+  
+require "redgreen"
+
+Autotest.add_hook :initialize do |at|
+  %w{.svn .hg .git html doc}.each {|exception| at.add_exception(exception)}
+end

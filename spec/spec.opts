@@ -1,0 +1,7 @@
+
+--color
+--format progress
+--loadby mtime
+--reverse
+--format html:spec_output.html
+

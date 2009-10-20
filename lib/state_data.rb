@@ -11,6 +11,7 @@ class StateData
   attr_reader :tester_main_state_data
   attr_reader :tester_scheduler_state_data
   attr_reader :main
+  attr_reader :comms_driver_state_data
 
   def self.test_state_data
     [
@@ -127,33 +128,46 @@ class StateData
     ]
   end
 
-	def self.dev_scheduler_state_data
+  def self.dev_scheduler_state_data
     [
-		 [:is_tick_due_state,:tick_not_due!,:have_files_changed_state],
-		 [:is_tick_due_state,:tick_due!,:send_tick_state],
+	  [:is_tick_due_state,:tick_not_due!,:have_files_changed_state],
+	  [:is_tick_due_state,:tick_due!,:send_tick_state],
 		 
-		 [:have_files_changed_state,:no_action!, :have_files_changed_state],
+	  [:have_files_changed_state,:no_action!, :have_files_changed_state],
 		 
-     [:send_tick_state, :sent_tick!, :await_tick_ack_state],
+      [:send_tick_state, :sent_tick!, :await_tick_ack_state],
      
-     [:await_tick_ack_state, :received_tick_ack!, :have_files_changed_state],
-     [:await_tick_ack_state, :received_tick_nak!, :increment_tester_nak_state],     
-     [:await_tick_ack_state, :await_tick_ack_timeout!, :no_connection_state],     
+      [:await_tick_ack_state, :received_tick_ack!, :have_files_changed_state],
+      [:await_tick_ack_state, :received_tick_nak!, :increment_tester_nak_state],     
+      [:await_tick_ack_state, :await_tick_ack_timeout!, :no_connection_state],     
 		 
-		 [:increment_tester_nak_state,:nak_overcount!,:init_state],
-		 [:increment_tester_nak_state,:not_nak_overcount!,:send_tick_state],
-
-
-		 [:pending,:PENDING!,:pending]
-		 
+	  [:increment_tester_nak_state,:nak_overcount!,:init_state],
+	  [:increment_tester_nak_state,:not_nak_overcount!,:send_tick_state],
+	  [:pending,:PENDING!,:pending]	 
     ]
   end
 		
-	def self.tester_scheduler_state_data
+  def self.tester_scheduler_state_data
     [
-		 [:idle_state, :no_action!, :idle_state],
-		 [:idle_state, :tick_received!, :send_tick_ack_state],
-		 [:send_tick_ack_state,:tick_ack_sent!,:idle_state]
+	  [:idle_state, :no_action!, :idle_state],
+	  [:idle_state, :tick_received!, :send_tick_ack_state],
+	  [:send_tick_ack_state,:tick_ack_sent!,:idle_state]
+    ]
+  end
+
+  def self.comms_driver_state_data
+    [
+	  [:init_state, :initialised!, :idle_state],
+	  
+	  [:idle_state, :no_data!, :idle_state],
+	  [:idle_state, :data_received!, :check_range_state],
+	  
+	  [:check_range_state, :range_error!, :range_error_state],
+	  [:check_range_state, :no_range_error!, :store_in_buffer_state],
+	  
+	  [:range_error_state, :range_error_logged!, :flush_buffer_state],
+	  
+	  
     ]
   end
 

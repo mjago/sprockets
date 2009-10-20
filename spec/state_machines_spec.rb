@@ -1,7 +1,9 @@
 
-require 'statemachine'
-require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','state_data'))
-require File.expand_path(File.join(File.dirname(__FILE__),'..','lib','state_machines'))
+require File.expand_path(File.join(
+          File.dirname(__FILE__),'..','lib','state_data'))
+
+require File.expand_path(File.join(
+          File.dirname(__FILE__),'..','lib','build_state_machine'))
 
 describe StateData do
   before do
@@ -24,13 +26,13 @@ describe StateData do
     @state_data.methods.include?('dev_tx_messaging_state_data').should == true
   end
 
-  describe 'StateMachines' do
+  describe 'BuildStateMachine' do
     before(:each) do
-      @statemachine = StateMachines.new
+      @statemachine = BuildStateMachine.new
     end
     
     it "exists as a class" do
-      @statemachine.class.should == StateMachines
+      @statemachine.class.should == BuildStateMachine
     end
     
     describe 'build_state_machine' do
@@ -39,13 +41,15 @@ describe StateData do
       end
       
       it 'returns a state machine when passed a state machine data name' do
-        @statemachine.build_state_machine('test_state_data').class.should == Statemachine::Statemachine
+        @statemachine.build_state_machine('test_state_data').
+          class.should == Statemachine::Statemachine
       end
     end    
 
     describe 'connection_states' do
       it 'should have statemachine called connection_states' do
-        @statemachine.connection_states.class.should == Statemachine::Statemachine
+        @statemachine.connection_states.class.
+          should == Statemachine::Statemachine
       end
       
       describe 'unconnected_state' do
@@ -523,8 +527,8 @@ describe StateData do
           @statemachine.dev_scheduler_states.tick_not_due!
         end
         
-        it do
-        end
+        #~ it do
+        #~ end
       end
       
       describe "send_tick_state" do
@@ -561,163 +565,38 @@ describe StateData do
         end
       end      
     end      
-#       describe 'increment_tester_nak_state' do
-#         before do
-#           @statemachine.dev_scheduler_states.initialised!
-#           @statemachine.dev_scheduler_states.tester_contacted!
-#           @statemachine.dev_scheduler_states.tester_heard!
-#           @statemachine.dev_scheduler_states.sent_tick_to_tester!
-#           @statemachine.dev_scheduler_states.received_tick_nak!
-#         end
-        
-#         it 'changes to init_state given nak_overcount!' do
-#           @statemachine.dev_scheduler_states.nak_overcount!
-#           @statemachine.dev_scheduler_states.state.should == :init_state
-#         end
-        
-#         it 'changes to send_tick_staten not_nak_overcount!' do
-#           @statemachine.dev_scheduler_states.not_nak_overcount!
-#           @statemachine.dev_scheduler_states.state.should == :send_tick_state
-#         end
-        
-#       end      
-#    end
     
-    ######################
-    # tester_main_states #
-    ######################
-    
-    describe "tester_main_states" do
-      it 'should have statemachine called tester_main_states' do
-        @statemachine.tester_main_states.class.should == Statemachine::Statemachine
-      end
-
-      describe 'init_state' do
-        it 'is the initial state' do
-          @statemachine.tester_main_states.state.should == :init_state
-        end
-        
-        it 'changes to listen_for_dev_state given initialised!' do
-          @statemachine.tester_main_states.initialised!
-          @statemachine.tester_main_states.state.should == :listen_for_dev_state
-        end
-        
-      end
-      
-      describe 'listen_for_dev_state' do
-        before do
-          @statemachine.tester_main_states.initialised!
-        end
-        
-        it 'is re-entrant given dev_unheard' do
-          @statemachine.tester_main_states.dev_unheard!
-          @statemachine.tester_main_states.state.should == :listen_for_dev_state
-        end
-        
-        it 'changes to contact_dev_state given dev_heard!' do
-          @statemachine.tester_main_states.dev_heard!
-          @statemachine.tester_main_states.state.should == :contact_dev_state
-        end
-        
-        it 'changes to init_state given listen_for_dev_timeout!' do
-          @statemachine.tester_main_states.listen_for_dev_timeout!
-          @statemachine.tester_main_states.state.should == :init_state
-        end
-      end      
-      
-      describe 'contact_dev_state' do
-        before do
-          @statemachine.tester_main_states.initialised!
-          @statemachine.tester_main_states.dev_heard!
-        end
-            
-        it 'is re-entrant given dev_not_contacted' do
-          @statemachine.tester_main_states.dev_not_contacted!
-          @statemachine.tester_main_states.state.should == :contact_dev_state
-        end
-        
-        it 'changes to full_duplex_state given dev_contacted!' do
-          @statemachine.tester_main_states.dev_contacted!
-          @statemachine.tester_main_states.state.should == :full_duplex_state
-        end
-        
-        it 'changes to listen_for_dev_state given dev_contact_timeout!' do
-          @statemachine.tester_main_states.dev_contact_timeout!
-          @statemachine.tester_main_states.state.should == :listen_for_dev_state
-        end
-      end
-    end
     
     ###########################
     # tester_scheduler_states #
     ###########################
     
-    describe "tester_scheduler_states" do
-      it 'should have statemachine called tester_scheduler_states' do
-        @statemachine.tester_scheduler_states.class.should == Statemachine::Statemachine
-      end
+    # describe "tester_scheduler_states" do
+    #   it 'should have statemachine called tester_scheduler_states' do
+    #     @statemachine.tester_scheduler_states.class.should == Statemachine::Statemachine
+    #   end
 
-      describe 'idle_state' do
-        it 'is re-entrant given no_action!' do
-          @statemachine.tester_scheduler_states.no_action!
-          @statemachine.tester_scheduler_states.state.should == :idle_state
-        end
-        it 'changes to send_tick_ack_state given tick_received!' do
-          @statemachine.tester_scheduler_states.tick_received!
-          @statemachine.tester_scheduler_states.state.should == :send_tick_ack_state
-        end
-      end
+    #   describe 'idle_state' do
+    #     it 'is re-entrant given no_action!' do
+    #       @statemachine.tester_scheduler_states.no_action!
+    #       @statemachine.tester_scheduler_states.state.should == :idle_state
+    #     end
+    #     it 'changes to send_tick_ack_state given tick_received!' do
+    #       @statemachine.tester_scheduler_states.tick_received!
+    #       @statemachine.tester_scheduler_states.state.should == :send_tick_ack_state
+    #     end
+    #   end
 
-      describe 'send_tick_ack_state' do
-        before do
-          @statemachine.tester_scheduler_states.tick_received!
-        end
+    #   describe 'send_tick_ack_state' do
+    #     before do
+    #       @statemachine.tester_scheduler_states.tick_received!
+    #     end
         
-        it 'changes to idle_state given tick_ack_sent!' do
-          @statemachine.tester_scheduler_states.tick_ack_sent!
-          @statemachine.tester_scheduler_states.state.should == :idle_state
-        end
-      end
-    end
-    
-#       describe 'send_tester_hash_state' do
-#         before do
-#           @statemachine.tester_main_states.initialised!
-#           @statemachine.tester_main_states.tester_contacted!
-#           @statemachine.tester_main_states.tester_heard!
-#         end
-        
-#         it 'changes to sent_tester_hash_state on sent_hash_to_tester!' do
-#           @statemachine.tester_main_states.sent_hash_to_tester!
-#           @statemachine.tester_main_states.state.should == :sent_tester_hash_state
-#         end
-
-#         it 'changes to warning_hash_nak_overcount_state on retry_overcount!' do
-#           @statemachine.tester_main_states.retry_overcount!
-#           @statemachine.tester_main_states.state.should == :warning_hash_nak_overcount_state
-#         end
-
-#       end
-      
-#       describe 'sent_tester_hash_state' do
-#         before do
-#           @statemachine.tester_main_states.initialised!
-#           @statemachine.tester_main_states.tester_contacted!
-#           @statemachine.tester_main_states.tester_heard!
-#           @statemachine.tester_main_states.sent_hash_to_tester!
-#         end
-        
-#         it 'changes to verify_tester_hash_state given received_hash_ack!' do
-#           @statemachine.tester_main_states.received_hash_ack!
-#           @statemachine.tester_main_states.state.should == :verify_tester_hash_state
-#         end
-        
-#         it 'changes to send_tester_hash_state given received_hash_nak!' do
-#           @statemachine.tester_main_states.received_hash_nak!
-#           @statemachine.tester_main_states.state.should == :send_tester_hash_state
-#         end
-  
-  
-  
+    #     it 'changes to idle_state given tick_ack_sent!' do
+    #       @statemachine.tester_scheduler_states.tick_ack_sent!
+    #       @statemachine.tester_scheduler_states.state.should == :idle_state
+    #     end
+    #   end
+    # end
   end
 end
